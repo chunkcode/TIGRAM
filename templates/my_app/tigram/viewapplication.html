@@ -1,0 +1,708 @@
+{% extends 'my_app/tigram/top_band_cont.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/viewapplication.css' %}">
+	<!-- <link rel="stylesheet" href="css/viewapplication.css"> -->
+    <!-- <link rel="stylesheet" href="{% static 'css/dash.css' %}"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-5.0.0-beta2-dist/css/bootstrap.min.css' %}"> -->
+    <!-- <script type="text/javascript" src="{% static 'bootstrap-5.0.0-beta2-dist/js/bootstrap.min.js' %}"></script> -->
+<style type="text/css">
+  /*.img-gallery1 {
+    display: block;
+    max-width:180px;
+    max-height:180px;
+    width: auto;
+    height: auto;
+}*/
+.modal{
+    overflow: auto;
+}
+#map_content {
+  display: none;
+  position: absolute;
+  z-index: -1;
+  /*padding-top: 130px;*/
+  left: 3%;
+  top: 5%;
+  width: 95%;
+  align-self: center;
+  height: 95%;
+  overflow: auto;
+  /*background-color: black;*/
+    /*z-index:100;*/
+    z-index:101;
+     /*z-index: -1;*/
+}
+
+/* Modal Content */
+#myModal3content{
+  position: relative;
+
+  /*background-color: greenyellow;*/
+  margin: auto;
+  padding: 0;
+  
+}
+.overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  /*background-color: rgba(0,0,0,0.5); */
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+</style>
+</head>
+
+<body>
+	<div class="cont_sec cont nice_scroll">	
+		<div class="wrap" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+           <br>  <h1 style="text-align: center;">Application Details</h1> <br>
+    <table class="table1 hide">
+        <tr class="layout hide">
+            <th id="col2" style="text-align:center; ">TIGRAM</th>
+        </tr>
+    </table>
+    <table class="table2" style="width: 70%;">
+        <tr>
+            <td class="head">Name:</td>
+            <td>{{applications.0.name}}</td>
+        </tr>
+        <tr>
+            <td class="head">Address:</td>
+            <td>{{applications.0.address}}</td>
+        </tr>
+        <tr>
+            <td class="head">Survey No.</td>
+            <td>{{applications.0.survey_no}}</td>
+        </tr>
+        <tr>
+            <td class="head">Name of the Village/Taluka/Block and District where the land on which the tree or trees
+                stand/lie:</td>
+            <td>{{applications.0.village}}, {{applications.0.taluka}}, {{applications.0.district}} - {{applications.0.pincode}}</td>
+        </tr>
+        <tr>
+            <td class="head">List showing the species of tree or trees proposed to be cut,etc:</td>
+            <td>{{applications.0.species_of_trees}}</td>
+        </tr>
+        <tr>
+            <td class="head">Purpose for which trees are proposed to be cut,etc:</td>
+            <td>{{applications.0.purpose}}</td>
+        </tr>
+    </table>
+    <br>
+		<div class="img_gal" style="width: 90%;">
+		<span id="center" style="text-transform:uppercase"><b>Attachments Gallery</b></span>
+		<br>
+
+            <div class="row">
+
+ <div class="column">
+
+   {% if proof_of_ownership_of_tree_type == 'pdf' %}
+   <div class="txt">Proof Of Ownership</div>
+   <a href="{{media_prefix}}/media/upload/proof_of_ownership/{{ applications.0.proof_of_ownership_of_tree }}"  target="_blank" class="btn btn-success" style="margin-left:17%; margin-top:25%; padding: 6px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 18px;">View Proof Of Ownership</a>
+
+   {% else %}
+   <img  class="img-gallery1" src="{{media_prefix}}/media/upload/proof_of_ownership/{{ applications.0.proof_of_ownership_of_tree }}"  style="width:100;" onclick="openModal();currentSlide(1)" class="hover-shadow cursor" id="doc_img_clk"  /><input type="file" hidden name="ownership_proof_img" value="{{ document.ownership_proof_img }}">
+   <div class="txt">Proof Of Ownership</div>
+   {% endif %}
+ 
+  </div>
+
+  <div class="column">
+    {% if revenue_approval_type == 'pdf' %}
+    <div class="txt">Land Tax Receipt</div>
+
+   <a href="{{media_prefix}}/media/upload/revenue_approval/{{ image_documents.revenue_approval }}"  target="_blank" class="btn btn-success" style="margin-left:17%; margin-top:25%; padding: 6px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 18px;">View Land Tax Receipt</a>
+
+   {% else %}
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/revenue_approval/{{ image_documents.revenue_approval }}" style="width:100;" onclick="openModal();currentSlide(2)" class="hover-shadow cursor" id="rev_app_img_clk" /><input type="file" hidden name="revenue_approval" value="{{ document.revenue_approval }}">
+  <div class="txt">Land Tax Receipt</div>
+  {% endif %}
+  </div>
+  <div class="column">
+    {% if declaration_type == 'pdf' %}
+    <div class="txt">Possession Certificate</div>
+
+   <a href="{{media_prefix}}/media/upload/declaration/{{ image_documents.declaration }}"  target="_blank" class="btn btn-success" style="margin-left:12%; margin-top:25%; padding: 6px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 18px;">View Possession Certificate</a>
+
+   {% else %}
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/declaration/{{ image_documents.declaration }}" style="width:100%" onclick="openModal();currentSlide(3)" class="hover-shadow cursor" id="dec_img_clk" /><input type="file" hidden name="declaration" value="{{ document.declaration }}">
+  <div class="txt">Possession Certificate</div>
+  {% endif %}
+  </div>
+
+  <div class="column">
+    {% if aadhar_detail_type == 'pdf' %}
+    <div class="txt">Photo Proof</div>
+
+   <a href="{{media_prefix}}/media/upload/aadhar_card/{{ image_documents.aadhar_detail }}"  target="_blank" class="btn btn-success" style="margin-left:20%; margin-top:25%; padding: 6px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 18px;">View Photo Proof</a>
+
+   {% else %}
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/aadhar_card/{{ image_documents.aadhar_detail }}" style="width:100%" onclick="openModal();currentSlide(4)" class="hover-shadow cursor" id="aad_img_clk" /><input type="file" hidden name="aadhar_detail" value="{{ document.aadhar_detail }}">
+  <div class="txt">Photo Proof</div>
+  {% endif %}
+  </div>
+  
+
+</div>
+<br><br>
+  <a style="margin-left: 40%;" href="{% url "get_zip_file"  applications.0.id%}" class="btn btn-info">CLICK HERE TO DOWNLOAD</a>
+  <br>
+            {% if image_documents.location_img1 != 'no_image.png' %}
+            <span id="center" style="text-transform:uppercase"><b>Tree Location Images</b></span>
+		<br/>
+			<div class="row">
+
+  <div class="column">
+    <img  class="img-gallery1" src="{{media_prefix}}/media/upload/location_img1/{{ image_documents.location_img1 }}" style="width:100;" onclick="openModal();currentSlide(5)" class="hover-shadow cursor"  />
+   <div class="txt">Location 1 Image</div>
+  </div>
+  <div class="column">
+    <img  class="img-gallery1" src="{{media_prefix}}/media/upload/location_img2/{{ image_documents.location_img2 }}" style="width:100;"  onclick="openModal();currentSlide(6)" class="hover-shadow cursor" />
+	 <div class="txt">Location 2 Image</div>
+  </div>
+  <div class="column">
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/location_img3/{{ image_documents.location_img3 }}" style="width:100;" onclick="openModal();currentSlide(7)" class="hover-shadow cursor"  />
+	<div class="txt">Location 3 Image</div>
+  </div>
+  <div class="column">
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/location_img4/{{ image_documents.location_img4 }}" style="width:100%" onclick="openModal();currentSlide(8)" class="hover-shadow cursor"  />
+	<div class="txt">Location 4 Image</div>
+  </div>
+
+</div>
+
+{% endif %}
+
+<div id="myModal" class="modal">
+  <span class="close cursor" onclick="closeModal()">&times;</span>
+  <div class="modal-content ">
+
+
+          <div class="mySlides">
+              <div class="numbertext">Proof of Ownership</div>
+              <img src="{{media_prefix}}/media/upload/proof_of_ownership/{{ applications.0.proof_of_ownership_of_tree }}" style="width:100%">
+          </div>
+
+    <div class="mySlides">
+      <div class="numbertext">Land Tax Receipt</div>
+      <img src="{{media_prefix}}/media/upload/revenue_approval/{{ image_documents.revenue_approval }}" style="width:100%">
+    </div>
+
+    <div class="mySlides">
+      <div class="numbertext">Possession Certificate</div>
+      <img src="{{media_prefix}}/media/upload/declaration/{{ image_documents.declaration }}" style="width:100%">
+    </div>
+
+       <div class="mySlides">
+          <div class="numbertext">Photo Proof</div>
+          <img src="{{media_prefix}}/media/upload/aadhar_card/{{ image_documents.aadhar_detail }}" style="width:100%">
+       </div>
+       {% if image_documents.location_img1 != 'no_image.png' %}
+      <div class="mySlides">
+      <div class="numbertext">Location 1 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img1/{{ image_documents.location_img1 }}" style="width:100%">
+    </div>
+       <div class="mySlides">
+      <div class="numbertext">Location 2 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img2/{{ image_documents.location_img2 }}" style="width:100%">
+    </div>
+       <div class="mySlides">
+      <div class="numbertext">Location 3 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img3/{{ image_documents.location_img3 }}" style="width:100%">
+    </div>
+       <div class="mySlides">
+      <div class="numbertext">Location 4 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img4/{{ image_documents.location_img4 }}" style="width:100%">
+    </div>
+    {% endif %}
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+    <div class="caption-container">
+      <p id="caption"></p>
+    </div>
+
+
+   
+  </div>
+</div>
+
+{% if image_documents.location_img1 != 'no_image.png' %}
+            <a href="{% url 'location_view' app_id %}" target="_blank" class="btn btn-success" style="margin-left:37%; width: 22%; padding: 6px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 20px;">View Location</a>
+            {% endif %}
+
+    </table><br>
+<script>
+function openModal() {
+  document.getElementById("myModal").style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById("myModal").style.display = "none";
+}
+function openModal2() {
+  document.getElementById("myModal2").style.display = "block";
+}
+function closeModal2(){
+  document.getElementById("myModal2").style.display = "none";
+}
+function openModal3() {
+  document.getElementById("map_content").style.display = "block";
+}
+    function closeModal3(){
+  document.getElementById("map_content").style.display = "none";
+}
+var slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  var captionText = document.getElementById("caption");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  captionText.innerHTML = dots[slideIndex-1].alt;
+}
+</script>
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
+{% if groups == "forest range officer"%}
+    {% if applications.0.application_status == "A" %}
+    <br>
+    <span id="center"><b>Approved Species and Log Details For Cutting</b></span>
+    <br>
+    <table class="table3" style="width: 70%;">
+        <thead>
+        <tr>
+            <th id="vol">Species</th>
+            <th id="vol">GBH (cm)</th>
+            <th id="vol">Height (m)</th>
+            <th id="vol">Volume (m<sup>3</sup>)</th> 
+        </tr>
+        </thead>
+          <tbody>
+            {% if is_timberlog != '' %}
+            <tr>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+          </tr>
+          {% else %}
+          {% for each in approve_log_f %}
+          <tr>
+              <td>{{each.species_of_tree}}</td>
+              <td>{{each.breadth}}</td>
+              <td>{{each.length}}</td>
+              <td>{{each.volume}}</td>
+          </tr>
+          {% endfor %}
+            {% endif %}
+          </tbody>
+        </table><br>
+    <br>
+    {% else %}
+      {% if applications.0.status == True and applications.0.application_status == "P" %}
+      
+      <br>
+      <form enctype="multipart/form-data" action="{% url "approve_cutting_pass"  applications.0.id%}" method="post">
+        {% csrf_token %}
+      <span id="center"><b>Recommended Species and Log Details For Cutting By Deputy Range Officer</b></span>
+          <br>
+          <table class="table3" style="width: 70%;">
+              <thead>
+              <tr>
+                  <th id="vol">Check</th>
+                  <th id="vol">Species</th>
+                  <th id="vol">Applied GBH (cm)</th>
+                  <th id="vol">Verified GBH (cm)</th>
+                  <th id="vol">Applied Height (m)</th>
+                  <th id="vol">Verified Height (m)</th>
+                  <th id="vol">Applied Volume (m<sup>3</sup>)</th> 
+                  <th id="vol">Verified Volume (m<sup>3</sup>)</th> 
+              </tr>
+              </thead>
+                <tbody>
+                  {% if is_timberlog != '' %}
+                  <tr>
+                    <td>{{is_timberlog}}</td>
+                    <td>{{is_timberlog}}</td>
+                    <td>{{is_timberlog}}</td>
+                </tr>
+                {% else %}
+                {% for a,v in zip %}
+                <tr>
+                    <td><input type="checkbox" value="{{v.id}}" name="sel_approve" onchange="check_list()"></td>
+                    <td>{{v.species_of_tree}}</td>
+                    <td>{{a.breadth}}</td>
+                    <td>{{v.breadth}}</td>
+                    <td>{{a.length}}</td>
+                    <td>{{v.length}}</td>
+                    <td>{{a.volume}}</td>
+                    <td>{{v.volume}}</td>
+       
+                </tr>
+                {% endfor %}
+                  
+                </tbody>
+      
+          </table>
+          <br>
+        
+          
+          <br>
+          <br>
+
+          
+          <br>
+          <input type='text' name = 'remark_text' required placeholder="Enter your remarks" >  <input type='file' name = 'up_file'  >
+          <script>
+            function check_list(){
+              
+              var a = $('input[name=sel_approve]:checked').length;
+              if(a<1){
+                document.getElementById("ap").style.display = "none"
+                swal("select atleast one log to approve application")
+              }
+              else{
+                document.getElementById("ap").style.display = "block"
+              }
+              
+            }
+          </script>
+        <br>
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+          <input type="submit" name="action" class="btn btn-danger" value="Reject" style="margin: 15px;"  id="re"/>
+        <input type="submit" name="action" value="Approve" id="ap"  class="btn btn-success" style="display: none; margin: 15px;"/>
+        
+        
+      </div>
+        </form>
+        {% endif %}
+        {% else %}
+        <br>
+    <span id="center"><b>Requested Species and Log Details For Cutting</b></span>
+    <br>
+    <table class="table3" style="width: 70%;">
+        <thead>
+        <tr>
+            <th id="vol">Species</th>
+            <th id="vol">GBH (cm)</th>
+            <th id="vol">Height (m)</th>
+            <th id="vol">Volume (m<sup>3</sup>)</th> 
+        </tr>
+        </thead>
+          <tbody>
+            {% if is_timberlog != '' %}
+            <tr>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+          </tr>
+          {% else %}
+          {% for each in applied_log %}
+          <tr>
+              <td>{{each.species_of_tree}}</td>
+              <td>{{each.breadth}}</td>
+              <td>{{each.length}}</td>
+              <td>{{each.volume}}</td>
+          </tr>
+          {% endfor %}
+            {% endif %}
+          </tbody>
+        </table><br>
+    <br>
+      {% endif %}
+    {% endif %}
+{% else %}
+    {% if applications.0.application_status == "A" %}
+    <br>
+    <span id="center"><b>Approved Species and Log Details For Cutting</b></span>
+    <br>
+    <table class="table3" style="width: 70%;">
+        <thead>
+        <tr>
+            <th id="vol">Species</th>
+            <th id="vol">GBH (cm)</th>
+            <th id="vol">Height (m)</th>
+            <th id="vol">Volume (m<sup>3</sup>)</th> 
+        </tr>
+        </thead>
+          <tbody>
+            {% if is_timberlog != '' %}
+            <tr>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+          </tr>
+          {% else %}
+          {% for each in approve_log_f %}
+          <tr>
+              <td>{{each.species_of_tree}}</td>
+              <td>{{each.breadth}}</td>
+              <td>{{each.length}}</td>
+              <td>{{each.volume}}</td>
+          </tr>
+          {% endfor %}
+            {% endif %}
+          </tbody>
+        </table><br>
+    <br>
+    {% else %}
+    <br>
+    <span id="center"><b>Requested Species and Log Details For Cutting</b></span>
+    <br>
+    <table class="table3" style="width: 70%;">
+        <thead>
+        <tr>
+            <th id="vol">Species</th>
+            <th id="vol">GBH (cm)</th>
+            <th id="vol">Height (m)</th>
+            <th id="vol">Volume (m<sup>3</sup>)</th> 
+        </tr>
+        </thead>
+          <tbody>
+            {% if is_timberlog != '' %}
+            <tr>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+              <td>{{is_timberlog}}</td>
+          </tr>
+          {% else %}
+          {% for each in applied_log %}
+          <tr>
+              <td>{{each.species_of_tree}}</td>
+              <td>{{each.breadth}}</td>
+              <td>{{each.length}}</td>
+              <td>{{each.volume}}</td>
+          </tr>
+          {% endfor %}
+            {% endif %}
+          </tbody>
+        </table><br>
+    <br>
+    {% endif %}
+{% endif %}
+		
+    
+
+
+
+
+
+
+    {% comment %}                                                         start of stage 1                                                      {% endcomment %}
+
+{% if groups == "forest range officer"%}
+
+{% if applications.0.status == False and applications.0.application_status == "P"%}
+{% if applications.0.d %}
+<label>Already assigned to <b>{{applications.0.d}}</b></label> 
+
+{% endif %}
+<br>
+<label><input type="radio" name="choose" value="proceed" onclick="show('proceed')" >   <b>Proceed for field Verification</b></label>
+<label><input type="radio" name="choose" value="recheck" onclick="show('recheck')">   <b>Reject Application</b></label><br>
+
+<script>
+  function show(e){
+    document.getElementById(e).style.display = "block"
+    if (e == "proceed"){
+      document.getElementById("proceed").style.display = "block"
+      document.getElementById("recheck").style.display = "none"
+    }
+    else{
+      document.getElementById("proceed").style.display = "none"
+      document.getElementById("recheck").style.display = "block"
+    }
+  }
+</script>
+  <div id="proceed" style="display: none;">
+ {% comment %} {% if applications.0.is_form_two %} {% endcomment %}
+ <form enctype="multipart/form-data" action="{% url "assign_deputy_for_cutting" applications.0.id %}" method="post" >
+  {% csrf_token %}
+  
+ <input type="text" name="self" value="1" style="display: none;">
+ <label><b>Assign Deputy Officer:</b></label><br>
+<input type="radio" id="html_r" name="fav_language" value="1" onchange="radooo(this)">
+ <label for="html_r">Assign a deputy for Field Verification</label><br>
+<input type="radio" id="html_p" name="fav_language" value="2" onchange="radooo(this)">
+ <label for="html_p">Do Field Verification myself</label><br>
+
+<script>
+  function radooo(e){
+    if( e.value == "1"){
+      document.getElementById("i_will_assn").style.display = "block";
+      document.getElementById("i_will_not_assn").style.display = "none";
+
+    }
+    else{
+      document.getElementById("i_will_assn").style.display = "none";
+      document.getElementById("i_will_not_assn").style.display = "block";
+
+
+    }
+  }
+</script>
+
+
+
+
+
+<div id="i_will_assn" style="display: none;">
+ 
+
+  <label><b>Assign Deputy Officer:</b></label>
+  <div class="input-group mb-3">
+   <select name="deputy_id" id="sel-deputy" style="width: 45%;">
+      {% for each in range_officer %}
+      <option value="{{each.id}}">{{each.name}} - {{each.address}}</option>
+      {% endfor %}
+  </select>
+  
+  <br>
+  <div class="input-group-append" style="display: flex; flex-direction: column;width: 100%; ">
+    <br>
+    <div style="display: flex; flex-direction: row; justify-content: start; align-items: center;">
+
+      <label><b>Remark:</b></label>&nbsp;&nbsp;&nbsp;
+    <input type="text" name = "remark_text"  required>  
+    </div>
+    
+    <label><b>Supporting document:</b></label>
+
+    <input type="file" name = "up_file" accept=".jpg,.jpeg,.png,.pdf">  
+  </div>
+
+  </div>
+  <input type="submit" class="btn btn-success" value = "Proceed with Assigning Deputy">
+</form>
+</div>
+<div id="i_will_not_assn" style="display: none;">
+  {% if applications.0.application_status != "R" %}
+  <label><b>Field verification needed to be done through mobile application.</b></label>
+  {% endif %}
+  
+</div>
+ {% comment %} {% else %}
+ <form enctype="multipart/form-data" action="{% url "assign_deputy_for_cutting" applications.0.id %}" method="post" >
+  {% csrf_token %}
+ <div >
+  
+  <input type="text" name="self" value="2" style="display: none;">
+  <label><b>Assign Deputy Officer:</b></label>
+   <div class="input-group mb-3">
+    <select name="deputy_id" id="sel-deputy">
+       {% for each in range_officer %}
+       <option value="{{each.id}}">{{each.name}}</option>
+       {% endfor %}
+   </select>
+   <div class="input-group-append" style="display: flex; flex-direction: column;">
+  
+    <input type="text" name = "remark_text" >  
+    <input type="file" name = "up_file">  
+    <script>
+      function encodeImageFileAsURL(element) {
+        let file = element.files[0];
+        let reader = new FileReader();
+        reader.onloadend = function() {
+          document.write('RESULT: ', reader.result);
+        }
+        reader.readAsDataURL(file);
+      }
+    </script></div>
+  </div>
+  <input type="submit" class="btn btn-success" value = "Proceed with Assigning Deputy">
+</form>
+   </div>
+ </div>
+
+  {% endif %} {% endcomment %}
+
+  
+{% endif %}
+
+</div>
+<div id="recheck" style="display: none;">
+  <form enctype="multipart/form-data" action="{% url "reject_cutting_pass" applications.0.id %}" method="post">
+    {% csrf_token %}
+  <input type="text" name = "remark_text" placeholder="Enter your remarks" required>  
+  <input type="file" name = "up_file" accept=".jpg,.jpeg,.png,.pdf"> <br>
+  <br>
+  <input type="submit" class="btn btn-danger" value = "Reject Application">
+</form>
+</div>
+{% endif %} 
+{% if groups == "deputy range officer"%}
+{% if applications.0.status == False and applications.0.application_status != "R" %}
+<label><b>Field verification needed to be done through mobile application.</b></label>
+<br>
+<br>
+
+{% endif %}
+{% endif %}
+</div>
+{% comment %}                                                         this is up to stage 1                                                      {% endcomment %}
+
+
+
+{% comment %} <script type="text/javascript">
+  window.history.forward();
+  function noBack() {
+      window.history.forward();
+  }
+</script> {% endcomment %}
+
+</body>
+</html>
+
+{% endblock %}

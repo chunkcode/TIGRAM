@@ -1,0 +1,1710 @@
+{% extends 'my_app/tigram/admin/menu-left.html' %}
+{% load static %}
+{% block content %}
+
+<html >
+<head><title>
+	Map
+</title>
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" /><link href="Content/leaflet.css" rel="stylesheet" /><link href="Content/leaflet-sidebar.css" rel="stylesheet" /><link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    
+
+    <style type="text/css">
+        .wrapper {
+            position: relative !important;
+        }
+
+        .content-wrapper {
+            min-height: unset !important;
+        }
+
+        #map {
+            height: calc(100vh - 42.64px);
+            cursor: pointer;
+        }
+
+        .content-wrapper > .content {
+            padding: 0;
+        }
+
+        .leaflet-control-coordinates {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+            cursor: pointer;
+            padding: 2px 5px;
+        }
+
+            .leaflet-control-coordinates.hidden {
+                display: none;
+            }
+
+        .leaflet-control-coordinates-lng {
+            padding-left: 5px;
+        }
+
+        .leaflet-bottom .leaflet-control {
+            /*margin-bottom: 10px;*/
+        }
+
+        .leaflet-right {
+            right: 25px;
+        }
+
+        /*Zoom home*/
+        .leaflet-control-zoomhome a {
+            font: bold 18px "Lucida Console",Monaco,monospace;
+        }
+
+        a.leaflet-control-zoomhome-in,
+        a.leaflet-control-zoomhome-out {
+            font-size: 1.5em;
+            line-height: 26px;
+        }
+
+        /*Legend specific*/
+        .legend {
+            padding: 6px 8px;
+            font: 14px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.9);
+            /*box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);*/
+            /*border-radius: 5px;*/
+            line-height: 24px;
+            color: #555;
+        }
+
+
+            .legend h4 {
+                text-align: center;
+                // font-size: 16px;
+                margin: 2px 12px 8px;
+                color: #000000;
+            }
+
+            .legend span {
+                position: relative;
+                bottom: 3px;
+            }
+
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin: 0 8px 0 0;
+                opacity: 0.7;
+            }
+
+                .legend i.icon {
+                    background-size: 18px;
+                    background-color: rgba(255, 255, 255, 1);
+                }
+
+
+
+        /*Layer datalist Tree*/
+        ul, #Layers {
+            list-style-type: none;
+        }
+
+        #Layers {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            cursor: pointer;
+            -webkit-user-select: none; /* Safari 3.1+ */
+            -moz-user-select: none; /* Firefox 2+ */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none;
+            border-top: 0px !important;
+            box-shadow: none !important;
+        }
+
+            .box::before {
+                content: "\26B6";
+                color: black;
+                display: inline-block;
+                margin-right: 6px;
+                /*-ms-transform: rotate(90deg); 
+                -webkit-transform: rotate(90deg); 
+                transform: rotate(90deg);
+                content: "\25B6";*/
+                content: "\26B6";
+                color: dodgerblue;
+                font-size: 18px;
+                background: none !important;
+            }
+
+        .check-box::before {
+            -ms-transform: rotate(-90deg); /* IE 9 */
+            -webkit-transform: rotate(-90deg); /* Safari */
+            transform: rotate(-90deg);
+            content: "\26B6";
+            color: black;
+            font-size: 18px;
+        }
+
+        .nested {
+            display: active;
+        }
+
+        .active1 {
+            display: none;
+        }
+
+        .sidenavgraph {
+            height: 92vh;
+            width: 0;
+            position: absolute;
+            z-index: 1;
+            /*top: 0;*/
+            right: 0;
+            background-color: #ececec;
+            overflow-x: hidden;
+            transition: none;
+            padding-top: 60px;
+        }
+
+            .sidenavgraph a {
+                /*padding: 8px 8px 8px 32px;*/
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+            }
+
+                .sidenavgraph a:hover {
+                    color: #f1f1f1;
+                }
+
+            .sidenavgraph .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+        .table td, .table th {
+            padding: 10px !important;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenavgraph {
+                padding-top: 15px;
+            }
+
+                .sidenavgraph a {
+                    font-size: 18px;
+                }
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="5qXz+0nPDOs6VN2TlZD/vhFQzm4IL6J9arppGsKwUfgcHfWVUUmO2AB0llKYXmVr6aXdc2axUXyW98ja702JD/uaGa8l1RlYDCnD/+JVMlYAaWqM6cby7YaC01lw1y5UFbs8WBFjdrWnrU/V58YwJA==" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/NTFPIMS/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZDQyI0wK3mdgEIyXWdu4WiYuy2_8gnGz7YKgJ2ocgyjAJgy-IHVZ8YlRM5zA1Rzdfg2&amp;t=637454266754849868" type="text/javascript"></script>
+
+
+<script src="/NTFPIMS/ScriptResource.axd?d=NJmAwtEo3Ipnlaxl6CMhvoCpl7sH78MvXrpfdnV3Fr01rY16DZ1Y_RdcUtcSmnzxJLpqQD14QeEXtLUbNyzLqayzZsyuI1-Z_I712Fr3i4688juEkGKYBWI6vC6Zn_eIextzmfNWk27B1rg0QVz2g527xcXKPLBRhfmtmrmMh041&amp;t=363be08" type="text/javascript"></script>
+<script src="/NTFPIMS/ScriptResource.axd?d=dwY9oWetJoJoVpgL6Zq8OFeb-FlRd6k9K6qhCU-Y-SZpKC3N3CpYwM5fcWELgowkFDMvz8mQDtiOuTDGDnRxkCAJocOJzZhlChi06IsT0HQ3NB29FF8lT92UkcKDPYUqhbiM5FyViUgm8OIg72qceaMn5oxB0jYnHM6yAbzlMEo1&amp;t=363be08" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="ABB8670D" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="M2gA8g7SPSBKwR+OIpepQXwVI9QHuYg0ZtzbVMb/l31Z6VrGNn8kD3FSKIax6jMyVZnr4Wed6mU/F3H5mUzQa/RRgx9yDjjO0M9KCnwdB/R3Lnc8dvkUoem+rSBA9LP27x/DEGQFw0kj0OBgnew2DhoMIuKHwpgOUSQxvoSdqUNKe9/3fCnQsI6mUN8iyEWY7avGMnpNk9qxMlnszB9vS6Chb/ZiPz9l65bIc8AEtJ38+8RgB6aCnYpuQ+5ode6DUO8pkzFjR6eADdeFF/NF5nG5YTMJFpqesSL+kIKhh5U=" />
+</div>
+        <div>
+            
+    <div id="sidebar1" class="sidebar1 collapsed" style="bottom: 100px !important; z-index: 999">
+        <!-- Nav tabs -->
+        <div class="sidebar1-tabs">
+            <ul role="tablist">
+                <li><a href="#Search" style="margin-top: 10px" data-toggle="tooltip" title="Search" role="tab"><i class="fa fa-search"></i></a></li>
+                <li><a href="#LayerList" style="margin-top: 10px" data-toggle="tooltip" title="Layer List" role="tab">
+                    <img src="{% static 'https://cdn.onlinewebfonts.com/svg/img_520292.png' %}" style="width: 20px; height: 20px;"></a></li>
+                <li><a href="#Legend" style="margin-top: 10px" data-toggle="tooltip" title="Legend" role="tab"><i class="fa fa-list"></i></a></li>
+                
+            </ul>
+        </div>
+        <!-- Tab panes -->
+        <div class="sidebar1-content">
+            
+            
+            <div class="sidebar1-pane" id="Search">
+                <h1 class="sidebar1-header">Search<span class="sidebar1-close"><i class="fa fa-search"></i></span></h1>
+                <br />
+
+                <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ScriptManager2', 'form1', ['tUpdatePanel1','UpdatePanel1','tUpdatePanel3','UpdatePanel3'], [], [], 90, '');
+//]]>
+</script>
+
+                <div class="form-group">
+                    <div style="display: inline-grid">
+                        <div id="UpdatePanel1">
+	
+                                <select name="ddlType" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ddlType\&#39;,\&#39;\&#39;)&#39;, 0)" id="ddlType" class="form-control" style="width:250px;">
+		<option selected="selected" value="-- Select Layer --">-- Select Layer --</option>
+		<option value="DFO">Division</option>
+		<option value="RFO">Range</option>
+
+
+	</select>
+                            
+</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div style="display: inline-grid">
+                        <div id="UpdatePanel3">
+	
+                                <select name="ddlName" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ddlName\&#39;,\&#39;\&#39;)&#39;, 0)" id="ddlName" class="form-control" style="width:200px;">
+		<option value="-- Select Asset --">-- Select Asset --</option>
+
+	</select>
+                            
+</div>
+                    </div>
+                    <div style="display: inline-grid">
+                        <input type="button" id="btnName" value="Go" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar1-pane" id="LayerList">
+                <h1 class="sidebar1-header">Layer List<span class="sidebar1-close"><i class="fas fa-layer-group"></i></span></h1>
+                <br />
+                <ul id="Layers">
+                    <li>
+                        <span class="box"><b style="font-size: 18px">Base Layers</b></span>
+                        <ul class="nested" style="font-size: 14px; margin-top: 5px">
+                            <li>
+                                <input type="radio" checked="checked" id="rbGoogleStreet" name="btnGroup" onclick="fnText('GoogleStreet')" /><label for="rbGoogleStreet">&nbsp;Google Street</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbGoogleHybrid" name="btnGroup" onclick="fnText('GoogleHybrid')" /><label for="rbGoogleHybrid"> &nbsp;Google Hybrid</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbGoogleTerrain" name="btnGroup" onclick="fnText('GoogleTerrain')" /><label for="rbGoogleTerrain"> &nbsp;Google Terrain</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbOpenStreet" name="btnGroup" onclick="fnText('OpenStreetMap')" /><label for="rbOpenStreet">&nbsp;Open Street</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbOpenTopo" name="btnGroup" onclick="fnText('OpenTopoMap')" /><label for="rbOpenTopo"> &nbsp;Open Topo</label>
+                            </li>
+
+                            <li>
+                                <input type="radio" id="rbEsriWorldStreet" name="btnGroup" onclick="fnText('EsriWorldStreet')" /><label for="rbEsriWorldStreet">
+                                    &nbsp;
+                                    Esri World Street</label>
+                            </li>
+                        </ul>
+                    </li>
+                    <br />
+                    <li>
+                        <span class="box"><b style="font-size: 18px">Overlay Map Layers</b></span>
+                        <ul class="nested" style="font-size: 14px; margin-top: 5px">
+                            <li>
+                                <span class="box"><b style="font-size: 16px">Administrative Layers</b></span>
+                                <ul class="nested">
+                                    <li>
+                                        <input type="checkbox" id="checkBlock" onclick="fnText('ForestPlusBlocks')" /><label for="checkBlock"> &nbsp;Circle</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="checkDivision" checked="checked" onclick="fnText('ForestPlusDivision')" /><label for="checkDivision"> &nbsp;Division</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="checkRange" onclick="fnText('ForestPlusRange')" /><label for="checkRange"> &nbsp;Range</label>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <span class="box"><b style="font-size: 16px; margin-top: 5px">Markers</b></span>
+                                <ul class="nested">
+                                    <li>
+                                        <input type="checkbox" id="checkDFO" /><label for="checkDFO">&nbsp;Division</label>
+                                    </li>
+
+                                    <li>
+                                        <input type="checkbox" id="checkRFO" /><label for="checkRFO">&nbsp;Range</label>
+                                    </li>
+
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar1-pane" id="Legend">
+                <h1 class="sidebar1-header">Legends<span class="sidebar1-close"><i class="fa fa-list"></i></span></h1>
+                <br />
+                <ul id="LegendCategories">
+                    <li>
+                        
+                        <ul style="font-size: 14px; margin-left: -40px; margin-top: 5px">
+                            <li>
+                                <img src="{% static 'images/DFO1.png' %}" height="35" width="35" alt="DFO" />&nbsp;Division
+                            </li>
+                            <li>
+                                <img src="{% static 'images/officer.png' %}" height="35" width="35" alt="RFO" />&nbsp;Range
+                            </li>
+
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidebar1-pane" id="Charts">
+                <h1 class="sidebar1-header">Charts<span class="sidebar1-close"><i class="fa fa-chart-area"></i></span></h1>
+                <br />
+                <ul id="ChartsList" style="padding-left: 0px;">
+                    <li>
+                        <div id="GraphDiv" style="width: 70%">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="map" class="easyPrint sidebar1-map">
+        <div style="position: absolute; z-index: 999; margin-top: 20%; background-color: aliceblue;">
+            <h1 class="sidebar1-header" style="text-align: center; margin-right: 0px;">Legends<span class="sidebar1-open">&nbsp;&nbsp;<i class="fa fa-list"></i></span></h1>
+            <br />
+            <ul id="LegendCategories1">
+                <li>
+                    
+                    <ul style="font-size: 14px; margin-left: -40px; margin-top: 5px">
+                        <li>
+                            <img src="{% static 'images/DFO1.png' %}" height="35" width="35" alt="DFO" />&nbsp;Division
+                        </li>
+                        <li>
+                            <img src="{% static 'images/officer.png' %}" height="35" width="35" alt="RFO" />&nbsp;Range
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    
+
+
+
+    
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    
+    
+    <script src="Scripts/leaflet-sidebar.js"></script>
+    <!-- CSS and JS files for Search Box -->
+    <script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet/0.0.1-beta.5/esri-leaflet.js"></script>
+    <script src="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn-geoweb.s3.amazonaws.com/esri-leaflet-geocoder/0.0.1-beta.5/esri-leaflet-geocoder.css" />
+
+    
+
+    
+    
+
+    <script src="Scripts/jquery-3.4.1.min.js"></script>
+
+    <script src="Content/Control.Coordinates.js"></script>
+
+    <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+
+    
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <script src="Content/leaflet.zoomhome.js"></script>
+
+    
+    <link href="Content/easy-button.css" rel="stylesheet" />
+    <script src="Content/easy-button.js"></script>
+
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/topojson.v0.min.js"></script>
+
+
+    <script>
+
+        //debugger;
+        var toggler = document.getElementsByClassName("box");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".nested").classList.toggle("active1");
+                this.classList.toggle("check-box");
+            });
+        }
+
+        var OpenStreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            id: 'mapbox/streets-v11', attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            // maxZoom: 20,
+        });
+
+        var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            //  maxZoom: 20,
+            attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        });
+
+        var Esri_WorldStreetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            // maxZoom: 20,
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+        });
+
+        var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            // maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+
+        var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            //maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+
+        var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            // maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+
+        var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            // maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+
+        var id = 100;
+        document.getElementById('' + id + '')
+
+        // Administrative Layers
+
+        var ForestPlusDivision = new L.tileLayer.wms('https://www.gisfy.co.in:8443/geoserver/cite/wms?service=WMS&', {
+            layers: 'division',
+            format: 'image/png',
+            transparent: true
+
+        });
+
+        var ForestPlusRange = new L.tileLayer.wms('https://www.gisfy.co.in:8443/geoserver/cite/wms?service=WMS&', {
+            layers: 'range',
+            format: 'image/png',
+            transparent: true
+
+        });
+
+        var ForestPlusBlocks = new L.tileLayer.wms('https://www.gisfy.co.in:8443/geoserver/cite/wms?service=WMS&', {
+            layers: 'circle',
+            format: 'image/png',
+            transparent: true
+
+        });
+        var map = L.map('map', {
+            zoomControl: false,
+            center: [8.6068, 77.0842],
+            zoom: 10,
+            layers: [googleStreets, ForestPlusDivision]
+        });
+
+        function fnRecheckLayer() {
+            if ($("#checkDivision").is(":checked")) {
+                map.removeLayer(ForestPlusDivision);
+                ForestPlusDivision.addTo(map);
+            }
+            if ($("#checkRange").is(":checked")) {
+                map.removeLayer(ForestPlusRange);
+                ForestPlusRange.addTo(map);
+            }
+            if ($("#checkBlock").is(":checked")) {
+                map.removeLayer(ForestPlusBlocks);
+                ForestPlusBlocks.addTo(map);
+            }
+
+        }
+
+        function fnText(str) {
+            //debugger;
+            if (str == "GoogleStreet" || str == "GoogleHybrid" || str == "GoogleTerrain" || str == "OpenStreetMap" || str == "OpenTopoMap" || str == "OpenMapSurfer" || str == "EsriWorldStreet") {
+                map.removeLayer(googleStreets);
+                map.removeLayer(googleHybrid);
+                map.removeLayer(googleTerrain);
+                map.removeLayer(OpenStreet);
+                map.removeLayer(OpenTopoMap);
+                map.removeLayer(Esri_WorldStreetMap);
+            }
+
+            if (str == "GoogleStreet") {
+                if ($("#rbGoogleStreet").is(":checked")) {
+                    googleStreets.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(googleStreets);
+                }
+            }
+
+            if (str == "GoogleTerrain") {
+                if ($("#rbGoogleTerrain").is(":checked")) {
+                    googleTerrain.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(googleTerrain);
+                }
+            }
+
+            if (str == "GoogleHybrid") {
+                if ($("#rbGoogleHybrid").is(":checked")) {
+                    googleHybrid.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(googleHybrid);
+                }
+            }
+
+            if (str == "OpenStreetMap") {
+                if ($("#rbOpenStreet").is(":checked")) {
+                    OpenStreet.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(OpenStreet);
+                }
+            }
+
+
+            else if (str == "OpenTopoMap") {
+
+                if ($("#rbOpenTopo").is(":checked")) {
+                    OpenTopoMap.addTo(map);
+                    fnRecheckLayer();
+
+                }
+                else {
+                    map.removeLayer(OpenTopoMap);
+                }
+            }
+
+
+
+            else if (str == "EsriWorldStreet") {
+
+                if ($("#rbEsriWorldStreet").is(":checked")) {
+                    Esri_WorldStreetMap.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(Esri_WorldStreetMap);
+                }
+            }
+
+
+            if (str == "ResidentialDetails") {
+                if ($("#checkResidential").is(":checked")) {
+                    ResidentialDetails.addTo(map);
+                }
+                else {
+                    map.removeLayer(ResidentialDetails)
+                }
+            }
+
+
+
+
+            if (str == "ForestPlusDivision") {
+                if ($("#checkDivision").is(":checked")) {
+                    ForestPlusDivision.addTo(map);
+                }
+                else {
+                    map.removeLayer(ForestPlusDivision)
+                }
+            }
+            if (str == "ForestPlusRange") {
+                if ($("#checkRange").is(":checked")) {
+                    ForestPlusRange.addTo(map);
+                }
+                else {
+                    map.removeLayer(ForestPlusRange)
+                }
+            }
+            if (str == "ForestPlusBlocks") {
+                if ($("#checkBlock").is(":checked")) {
+                    ForestPlusBlocks.addTo(map);
+                }
+                else {
+                    map.removeLayer(ForestPlusBlocks)
+                }
+            }
+
+
+        }
+
+        //Zoom Home
+        var zoomHome = L.Control.zoomHome();
+        zoomHome.addTo(map);
+
+
+
+
+        // Zoom to Lat lng
+        //$(document).ready(function () { });
+
+        $("#btnName").click(function () {
+            //debugger;
+            var type = $('#ContentPlaceHolder1_ddlType :selected').val();
+            var BId = $('#ContentPlaceHolder1_ddlName :selected').val();
+            var obj = { 'strType': type, 'Value': BId };
+
+            //$.post('api/MapZoom/MapZoom', selectedValue, function (data) {
+            $.ajax({
+                type: 'POST',
+                async: "false",
+                url: 'TigramGIS.aspx/ZoomLocationId',
+                dataType: 'json',
+                data: JSON.stringify({ 'strType': type, 'Value': BId }),
+                contentType: "application/json; charset=utf-8",
+                processData: false,
+
+                //type: "POST",
+                //url: "EcoDashboard.aspx/Invoice",
+                //data: JSON.stringify({ 'From': from, 'To': to }),
+                //contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+                //processData: false,
+
+                success: function (data, textStatus, xhr) {
+                    console.log(data);
+                    //debugger;
+                    var latlng = data.d.split(',');
+                    var lat = parseFloat(latlng[0]);
+                    var lng = parseFloat(latlng[1]);
+                    //var lat = 16.306652;
+                    //var lng = 80.436539;
+                    var zoom = 20;
+                    //add a marker
+                    // var marker = L.marker([lat, lng], {}).addTo(map);
+                    //set the view
+                    map.setView([lat, lng], zoom);
+                    return false;
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        });
+        //});
+
+        var sidebar = L.control.sidebar('sidebar1', { position: 'right' }).addTo(map);
+
+        //Control 2: This add a scale to the map
+        L.control.scale().addTo(map);
+
+        // showing coordinates on map click
+        var c = new L.Control.Coordinates(); // you can send options to the constructor if you want to, otherwise default values are used
+
+        c.addTo(map);
+
+        map.on('click', function (e) {
+            c.setCoordinates(e);
+        });
+
+
+
+        // Full Screen
+        map.addControl(new L.Control.Fullscreen({
+            title: {
+                'false': 'View Fullscreen',
+                'true': 'Exit Fullscreen'
+            }
+        }));
+
+        L.easyButton('fa fa-location-arrow', function (btn, map) {
+
+            navigator.geolocation.getCurrentPosition(function (location) {
+                var latlng = new L.LatLng(location.coords.latitude, location.coords.longitude);
+                map.setView(latlng)
+                //var marker = L.marker(latlng).addTo(map);
+                //var myIcon = L.divIcon({ className: 'my-div-icon' });
+                // you can set .my-div-icon styles in CSS
+                //L.marker([latlng], { icon: myIcon }).addTo(map);
+
+                var custIcon = L.icon({
+                    iconUrl: 'Images/location.png',
+
+
+                    iconSize: [40, 45], // size of the icon
+                    //shadowSize: [50, 64], // size of the shadow
+                    iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+                    //shadowAnchor: [4, 62],  // the same for the shadow
+                    popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+                });
+                L.marker([location.coords.latitude, location.coords.longitude], { icon: custIcon }).addTo(map);
+            });
+        }).addTo(map);
+
+        // Control 3: This add a Search bar
+        var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+
+        var results = new L.LayerGroup().addTo(map);
+
+        searchControl.on('results', function (data) {
+            results.clearLayers();
+            for (var i = data.results.length - 1; i >= 0; i--) {
+                results.addLayer(L.marker(data.results[i].latlng));
+            }
+        });
+        var storeprocessingcenter = [];
+        var storeDFO = [];
+        var storeRFO = [];
+        var storeEcoShops = [];
+        var storeVSS = [];
+
+        $('#checkProcessingCenter').click(function () {
+            var arrobj = new Array();
+            const lati = new Array();
+            const long = new Array();
+            const name = new Array();
+            const incharge = new Array();
+            const inchargenum = new Array();
+            const inchargeemail = new Array();
+            const PCData = new Array();
+            var checked = $(this).is(':checked');
+            if (checked) {
+                $.ajax({
+                    type: "POST",
+                    url: "TigramGIS.aspx/fngetProcessingCenter",
+                    data: "",
+                    contentType: "application/json",
+                    datatype: "json",
+                    success: function (responseFromServer) {
+                        //debugger;
+
+                        for (i = 0; i < responseFromServer.d.length; i++) {
+
+                            var arrobj = (responseFromServer.d)[i].split(':');
+                            console.log(arrobj);
+                            lati.push(arrobj[0]);
+                            long.push(arrobj[1]);
+                            name.push(arrobj[2]);
+                            incharge.push(arrobj[3]);
+                            inchargenum.push(arrobj[4]);
+                            inchargeemail.push(arrobj[5]);
+                            PCData.push(arrobj[6]);
+                        }
+                        url = 'Images/Processingcenter.png';
+                        size = [40, 40];
+
+                        var greenIcon = L.icon({
+                            iconUrl: url,
+                            iconSize: size,
+
+                        });
+                        for (i = 0; i < lati.length; i++) {
+
+                            const markers = new L.Marker({ lat: lati[i], lon: long[i] }, { icon: greenIcon });
+                            markers.bindPopup("<table class=" + '"' + "table table-bordered table-striped" + '"' + "><tbody><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">PC Name</td><td>" + name[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Incharge Name</td><td>" + incharge[i] + "</td></tr><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Number</td><td>" + inchargenum[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">E-mail</td><td>" + inchargeemail[i] + "</td></tr></tbody></table>", { maxWidth: 620 }).openPopup();
+                            map.addLayer(markers);
+                            var data = PCData[i];
+                            var pcname = name[i];
+                            markers.on('mouseover', function () {
+                                this.openPopup();
+                            });
+                            markers.on('click', function () {
+                                debugger;
+                                openPCNav(data);
+                            });
+                            markers.on('mouseout', function () {
+                                this.closePopup();
+                            });
+
+                            storeprocessingcenter.push(markers);
+                        }
+
+                    }
+                });
+
+            }
+            else {
+                if (storeprocessingcenter.length > 0) {
+                    for (i = 0; i < storeprocessingcenter.length; i++) {
+
+                        map.removeLayer(storeprocessingcenter[i]);
+                        // map.removeLayer(storecustcircle[i]);
+                    }
+                }
+            }
+        });
+
+        $('#checkDFO').click(function () {
+            var arrobj = new Array();
+            const lati = new Array();
+            const long = new Array();
+            const name = new Array();
+            const incharge = new Array();
+            const inchargenum = new Array();
+            const inchargeemail = new Array();
+            const DFOData = new Array();
+            var checked = $(this).is(':checked');
+            if (checked) {
+                $.ajax({
+                    type: "POST",
+                    url: "TigramGIS.aspx/fngetDFO",
+                    data: "",
+                    contentType: "application/json",
+                    datatype: "json",
+                    success: function (responseFromServer) {
+                        //debugger;
+
+                        for (i = 0; i < responseFromServer.d.length; i++) {
+
+                            var arrobj = (responseFromServer.d)[i].split(':');
+                            console.log(arrobj);
+                            lati.push(arrobj[0]);
+                            long.push(arrobj[1]);
+                            name.push(arrobj[2]);
+                            incharge.push(arrobj[3]);
+                            inchargenum.push(arrobj[4]);
+                            inchargeemail.push(arrobj[5]);
+                            DFOData.push(arrobj[6]);
+                        }
+                        url = 'images/DFO1.png';
+                        size = [70, 70];
+
+                        var greenIcon = L.icon({
+                            iconUrl: url,
+                            iconSize: size,
+
+                        });
+                        for (i = 0; i < lati.length; i++) {
+                            const markers = new L.Marker({ lat: lati[i], lon: long[i] }, { icon: greenIcon });
+                            markers.bindPopup("<table class=" + '"' + "table table-bordered table-striped" + '"' + "><tbody><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">DFO Name</td><td>" + name[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Incharge Name</td><td>" + incharge[i] + "</td></tr><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Number</td><td>" + inchargenum[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">E-mail</td><td>" + inchargeemail[i] + "</td></tr></tbody></table>").openPopup();
+                            map.addLayer(markers);
+                            var Division = DFOData[i];
+                            var DFOname = name[i];
+                            markers.on('mouseover', function () {
+                                this.openPopup();
+                            });
+                            markers.on('click', function () {
+                                debugger;
+                                openDFONav(Division, DFOname);
+                            });
+                            markers.on('mouseout', function () {
+                                this.closePopup();
+                            });
+                            storeDFO.push(markers);
+                        }
+
+                    }
+                });
+
+            }
+            else {
+                if (storeDFO.length > 0) {
+                    for (i = 0; i < storeDFO.length; i++) {
+
+                        map.removeLayer(storeDFO[i]);
+                        // map.removeLayer(storecustcircle[i]);
+                    }
+                }
+            }
+        });
+
+        $('#checkRFO').click(function () {
+            var arrobj = new Array();
+            const lati = new Array();
+            const long = new Array();
+            const name = new Array();
+            const incharge = new Array();
+            const inchargenum = new Array();
+            const inchargeemail = new Array();
+            const RFOData = new Array();
+            var checked = $(this).is(':checked');
+            if (checked) {
+                $.ajax({
+                    type: "POST",
+                    url: "TigramGIS.aspx/fngetRFO",
+                    data: "",
+                    contentType: "application/json",
+                    datatype: "json",
+                    success: function (responseFromServer) {
+                        //debugger;
+
+                        for (i = 0; i < responseFromServer.d.length; i++) {
+
+                            var arrobj = (responseFromServer.d)[i].split(':');
+                            console.log(arrobj);
+                            lati.push(arrobj[0]);
+                            long.push(arrobj[1]);
+                            name.push(arrobj[2]);
+                            incharge.push(arrobj[3]);
+                            inchargenum.push(arrobj[4]);
+                            inchargeemail.push(arrobj[5]);
+                            RFOData.push(arrobj[6]);
+                        }
+                        url = 'Images/officer.png';
+                        size = [80, 70];
+
+                        var greenIcon = L.icon({
+                            iconUrl: url,
+                            iconSize: size,
+
+                        });
+                        for (i = 0; i < lati.length; i++) {
+
+                            const markers = new L.Marker({ lat: lati[i], lon: long[i] }, { icon: greenIcon });
+                            markers.bindPopup("<table class=" + '"' + "table table-bordered table-striped" + '"' + "><tbody><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">RFO Name</td><td>" + name[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Incharge Name</td><td>" + incharge[i] + "</td></tr><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Number</td><td>" + inchargenum[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">E-mail</td><td>" + inchargeemail[i] + "</td></tr></tbody></table>").openPopup();
+                            map.addLayer(markers);
+                            var rfoDate = RFOData[i];
+                            var rfoname = name[i];
+                            markers.on('mouseover', function () {
+                                this.openPopup();
+                            });
+                            markers.on('click', function () {
+                                debugger;
+                                openRFONav(rfoDate, rfoname);
+                            });
+                            markers.on('mouseout', function () {
+                                this.closePopup();
+                            });
+                            storeRFO.push(markers);
+                        }
+
+                    }
+                });
+
+            }
+            else {
+                if (storeRFO.length > 0) {
+                    for (i = 0; i < storeRFO.length; i++) {
+
+                        map.removeLayer(storeRFO[i]);
+                        // map.removeLayer(storecustcircle[i]);
+                    }
+                }
+            }
+        });
+
+        $('#checkEcoShops').click(function () {
+            var arrobj = new Array();
+            const lati = new Array();
+            const long = new Array();
+            const name = new Array();
+            const incharge = new Array();
+            const inchargenum = new Array();
+            const inchargeemail = new Array();
+            const EcoData = new Array();
+            var checked = $(this).is(':checked');
+            if (checked) {
+                $.ajax({
+                    type: "POST",
+                    url: "TigramGIS.aspx/fngetEcoShops",
+                    data: "",
+                    contentType: "application/json",
+                    datatype: "json",
+                    success: function (responseFromServer) {
+                        //debugger;
+
+                        for (i = 0; i < responseFromServer.d.length; i++) {
+
+                            var arrobj = (responseFromServer.d)[i].split(':');
+                            console.log(arrobj);
+                            lati.push(arrobj[0]);
+                            long.push(arrobj[1]);
+                            name.push(arrobj[2]);
+                            incharge.push(arrobj[3]);
+                            inchargenum.push(arrobj[4]);
+                            inchargeemail.push(arrobj[5]);
+                            EcoData.push(arrobj[6]);
+                        }
+                        url = 'Images/EcoShop.png';
+                        size = [40, 40];
+
+                        var greenIcon = L.icon({
+                            iconUrl: url,
+                            iconSize: size,
+
+                        });
+                        for (i = 0; i < lati.length; i++) {
+
+                            const markers = new L.Marker({ lat: lati[i], lon: long[i] }, { icon: greenIcon });
+                            markers.bindPopup("<table class=" + '"' + "table table-bordered table-striped" + '"' + "><tbody><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Eco Name</td><td>" + name[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Incharge Name</td><td>" + incharge[i] + "</td></tr><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Number</td><td>" + inchargenum[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">E-mail</td><td>" + inchargeemail[i] + "</td></tr></tbody></table>").openPopup();
+                            map.addLayer(markers);
+                            markers.on('mouseover', function () {
+                                this.openPopup();
+                            });
+                            var ecoDate = EcoData[i];
+                            markers.on('click', function () {
+                                debugger;
+                                openEcoNav(ecoDate);
+                            });
+                            markers.on('mouseout', function () {
+                                this.closePopup();
+                            });
+                            storeEcoShops.push(markers);
+                        }
+
+                    }
+                });
+
+            }
+            else {
+                if (storeEcoShops.length > 0) {
+                    for (i = 0; i < storeEcoShops.length; i++) {
+
+                        map.removeLayer(storeEcoShops[i]);
+                        // map.removeLayer(storecustcircle[i]);
+                    }
+                }
+            }
+        });
+
+        $('#checkVSS').click(function () {
+            var arrobj = new Array();
+            const lati = new Array();
+            const long = new Array();
+            const name = new Array();
+            const incharge = new Array();
+            const inchargenum = new Array();
+            const inchargeemail = new Array();
+            const VSSData = new Array();
+            var checked = $(this).is(':checked');
+            if (checked) {
+                $.ajax({
+                    type: "POST",
+                    url: "TigramGIS.aspx/fngetVSS",
+                    data: "",
+                    contentType: "application/json",
+                    datatype: "json",
+                    success: function (responseFromServer) {
+                        //debugger;
+
+                        for (i = 0; i < responseFromServer.d.length; i++) {
+
+                            var arrobj = (responseFromServer.d)[i].split(':');
+                            console.log(arrobj);
+                            lati.push(arrobj[0]);
+                            long.push(arrobj[1]);
+                            name.push(arrobj[2]);
+                            incharge.push(arrobj[3]);
+                            inchargenum.push(arrobj[4]);
+                            VSSData.push(arrobj[5]);
+                        }
+                        url = 'images/VSS.png';
+                        size = [40, 40];
+
+                        var greenIcon = L.icon({
+                            iconUrl: url,
+                            iconSize: size
+                        });
+                        for (i = 0; i < lati.length; i++) {
+
+                            const markers = new L.Marker({ lat: lati[i], lon: long[i], label: name[i] }, { icon: greenIcon });
+                            //markers.setTitle(name[i]);
+                            markers.bindPopup("<table class=" + '"' + "table table-bordered table-striped" + '"' + "><tbody><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">VSS Name</td><td>" + name[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Incharge Name</td><td>" + incharge[i] + "</td></tr><tr><td style=" + '"' + "background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">Number</td><td>" + inchargenum[i] + "</td></tr><tr><td style=" + '"' + "background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold" + '"' + ">E-mail</td><td>" + inchargeemail[i] + "</td></tr></tbody></table>").openPopup();
+                            map.addLayer(markers);
+                            markers.on('mouseover', function () {
+                                this.openPopup();
+                            });
+                            var vssDate = VSSData[i];
+                            var vssname = name[i];
+                            markers.on('click', function () {
+                                debugger;
+                                openVSSNav(vssDate, vssname);
+                            });
+                            markers.on('mouseout', function () {
+                                this.closePopup();
+                            });
+                            storeVSS.push(markers);
+                        }
+
+                    }
+                });
+
+            }
+            else {
+                if (storeVSS.length > 0) {
+                    for (i = 0; i < storeVSS.length; i++) {
+
+                        map.removeLayer(storeVSS[i]);
+                        // map.removeLayer(storecustcircle[i]);
+                    }
+                }
+            }
+        });
+
+        function sleep(milliseconds) {
+            const date = Date.now();
+            let currentDate = null;
+            do {
+                currentDate = Date.now();
+            } while (currentDate - date < milliseconds);
+        }
+
+        function openPCNav(PCData) {
+            const element = document.getElementById("chartli");
+            if (element.classList.contains("active") == false) {
+                document.getElementById("Charta").click();
+            }
+            //document.getElementById("sidenavgraph").style.width = "250px";
+            //document.getElementById("movesidebar").style.marginRight = "250px";
+            //document.getElementById("sidebar1").style.marginRight = "250px";
+            $('#GraphDiv').html("");
+            $('#GraphDiv').append('<div id="piechart1" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechartTable1"  style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechart2" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechartTable2"  style="padding:5px;"></div>');
+            sleep(1000);
+            var pcData = PCData;
+            var data = pcData.split(',');
+            console.log('Printing data');
+            console.log(data);
+            $.ajax({
+                type: "POST",
+                async: "false",
+                url: "TigramGIS.aspx/VSSAcknoledments",
+                data: JSON.stringify({ VSS: data[2], PCName: data[3], Range: data[1], Division: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    debugger;
+                    console.log(r.d);
+                    var tData = r.d.split(',');
+                    var Applied = parseInt(tData[0]);
+                    var Approved = parseInt(tData[1]);
+                    var Rejected = parseInt(tData[2]);
+                    var Pending = parseInt(tData[3]);
+
+                    //$("#piechartTable1").html("<table class='table table-bordered table-striped'><tbody><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td>Applied</td><td>" + tData[0] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Approved</td><td>" + tData[1] + "</td></tr><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td >Rejected</td><td>" + tData[2] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Pending</td><td>" + tData[3] + "</td></tr></tbody></table>");
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        debugger;
+                        var data = google.visualization.arrayToDataTable([
+                            ["Category", "Total"],
+                            ["Applied", Applied],
+                            ["Approved", Approved],
+                            ["Rejected", Rejected],
+                            ["Pending", Pending]
+                        ]);
+
+                        //var options = { title: 'Generated Construction Notices', colors: ['#fd7e14'] };
+                        var options = {
+                            title: "VSS Acknowledgement",
+                            pieSliceText: 'value',
+                            position: 'top',
+                            pieHole: 0.3,
+                            height: 300,
+                            width: 250,
+                            legend: { position: 'bottom', textStyle: { color: 'blue', fontSize: 7 } },
+                            colors: ['blue', 'green', 'red', 'orange']
+                        };
+
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+                        chart.draw(data, options);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                async: "false",
+                url: "TigramGIS.aspx/DFOAcknoledments",
+                data: JSON.stringify({ VSS: data[2], PCName: data[3], Range: data[1], Division: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    debugger;
+                    console.log(r.d);
+                    var tData = r.d.split(',');
+                    var Applied = parseInt(tData[0]);
+                    var Approved = parseInt(tData[1]);
+                    var Rejected = parseInt(tData[2]);
+                    var Pending = parseInt(tData[3]);
+
+                    //$("#piechartTable2").html("<table class='table table-bordered table-striped'><tbody><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td>Applied</td><td>" + tData[0] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Approved</td><td>" + tData[1] + "</td></tr><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td >Rejected</td><td>" + tData[2] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Pending</td><td>" + tData[3] + "</td></tr></tbody></table>");
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        debugger;
+                        var data = google.visualization.arrayToDataTable([
+                            ["Category", "Total"],
+                            ["Applied", Applied],
+                            ["Approved", Approved],
+                            ["Rejected", Rejected],
+                            ["Pending", Pending]
+                        ]);
+
+                        //var options = { title: 'Generated Construction Notices', colors: ['#fd7e14'] };
+                        var options = {
+                            title: "DFO Acknowledgement",
+                            pieSliceText: 'value',
+                            position: 'top',
+                            pieHole: 0.3,
+                            height: 300,
+                            width: 250,
+                            legend: { position: 'bottom', textStyle: { color: 'blue', fontSize: 7 } },
+                            colors: ['blue', 'green', 'red', 'orange']
+                        };
+
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+                        chart.draw(data, options);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+        function openDFONav(DFOData, DFOName) {
+            //$("#Charta").click();
+            const element = document.getElementById("chartli");
+            if (element.classList.contains("active") == false) {
+                document.getElementById("Charta").click();
+            }
+            //document.getElementById("sidenavgraph").style.width = "250px";
+            //document.getElementById("movesidebar").style.marginRight = "250px";
+            //document.getElementById("sidebar1").style.marginRight = "250px";
+            $('#GraphDiv').html("");
+            $('#GraphDiv').append('<div id="piechart1" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechartTable1"  style="padding:5px;"></div>');
+            sleep(1000);
+            $.ajax({
+                type: "POST",
+                async: "false",
+                url: "TigramGIS.aspx/DFOAcknoledments",
+                data: JSON.stringify({ Division: DFOData, VSS: '', PCName: '', Range: '' }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    debugger;
+                    console.log(r.d);
+                    var tData = r.d.split(',');
+                    var Applied = parseInt(tData[0]);
+                    var Approved = parseInt(tData[1]);
+                    var Rejected = parseInt(tData[2]);
+                    var Pending = parseInt(tData[3]);
+
+                    //$("#piechartTable1").html("<table class='table table-bordered table-striped'><tbody><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td>Applied</td><td>" + tData[0] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Approved</td><td>" + tData[1] + "</td></tr><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td >Rejected</td><td>" + tData[2] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Pending</td><td>" + tData[3] + "</td></tr></tbody></table>");
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        debugger;
+                        var data = google.visualization.arrayToDataTable([
+                            ["Category", "Total"],
+                            ["Applied", Applied],
+                            ["Approved", Approved],
+                            ["Rejected", Rejected],
+                            ["Pending", Pending]
+                        ]);
+
+                        //var options = { title: 'Generated Construction Notices', colors: ['#fd7e14'] };
+                        var options = {
+                            title: "DFO Acknowledgement",
+                            pieSliceText: 'value',
+                            position: 'top',
+                            pieHole: 0.3,
+                            height: 300,
+                            width: 250,
+                            legend: { position: 'bottom', textStyle: { color: 'blue', fontSize: 7 } },
+                            colors: ['blue', 'green', 'red', 'orange']
+                        };
+
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+                        chart.draw(data, options);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+        function openRFONav(RFODate, Name) {
+            const element = document.getElementById("chartli");
+            if (element.classList.contains("active") == false) {
+                document.getElementById("Charta").click();
+            }
+
+            $('#GraphDiv').html("");
+            $('#GraphDiv').append('<div id="piechart1" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechartTable1"  style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechart2" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechartTable2"  style="padding:5px;"></div>');
+            sleep(1000);
+            var rfoData = RFODate;
+            var data = rfoData.split(',');
+
+            $.ajax({
+                type: "POST",
+                async: "false",
+                url: "TigramGIS.aspx/VSSAcknoledments",
+                data: JSON.stringify({ VSS: '', PCName: '', Range: data[1], Division: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    debugger;
+                    console.log(r.d);
+                    var tData = r.d.split(',');
+                    var Applied = parseInt(tData[0]);
+                    var Approved = parseInt(tData[1]);
+                    var Rejected = parseInt(tData[2]);
+                    var Pending = parseInt(tData[3]);
+
+                    //$("#piechartTable1").html("<table class='table table-bordered table-striped'><tbody><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td>Applied</td><td>" + tData[0] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Approved</td><td>" + tData[1] + "</td></tr><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td >Rejected</td><td>" + tData[2] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Pending</td><td>" + tData[3] + "</td></tr></tbody></table>");
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        debugger;
+                        var data = google.visualization.arrayToDataTable([
+                            ["Category", "Total"],
+                            ["Applied", Applied],
+                            ["Approved", Approved],
+                            ["Rejected", Rejected],
+                            ["Pending", Pending]
+                        ]);
+
+                        //var options = { title: 'Generated Construction Notices', colors: ['#fd7e14'] };
+                        var options = {
+                            title: "VSS Acknowledgement",
+                            pieSliceText: 'value',
+                            position: 'top',
+                            pieHole: 0.3,
+                            height: 300,
+                            width: 250,
+                            legend: { position: 'bottom', textStyle: { color: 'blue', fontSize: 7 } },
+                            colors: ['blue', 'green', 'red', 'orange']
+                        };
+
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+                        chart.draw(data, options);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                async: "false",
+                url: "TigramGIS.aspx/DFOAcknoledments",
+                data: JSON.stringify({ VSS: '', PCName: '', Range: data[1], Division: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    debugger;
+                    console.log(r.d);
+                    var tData = r.d.split(',');
+                    var Applied = parseInt(tData[0]);
+                    var Approved = parseInt(tData[1]);
+                    var Rejected = parseInt(tData[2]);
+                    var Pending = parseInt(tData[3]);
+
+                    //$("#piechartTable2").html("<table class='table table-bordered table-striped'><tbody><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td>Applied</td><td>" + tData[0] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Approved</td><td>" + tData[1] + "</td></tr><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td >Rejected</td><td>" + tData[2] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Pending</td><td>" + tData[3] + "</td></tr></tbody></table>");
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        debugger;
+                        var data = google.visualization.arrayToDataTable([
+                            ["Category", "Total"],
+                            ["Applied", Applied],
+                            ["Approved", Approved],
+                            ["Rejected", Rejected],
+                            ["Pending", Pending]
+                        ]);
+
+                        //var options = { title: 'Generated Construction Notices', colors: ['#fd7e14'] };
+                        var options = {
+                            title: "DFO Acknowledgement",
+                            pieSliceText: 'value',
+                            position: 'top',
+                            pieHole: 0.3,
+                            height: 300,
+                            width: 250,
+                            legend: { position: 'bottom', textStyle: { color: 'blue', fontSize: 7 } },
+                            colors: ['blue', 'green', 'red', 'orange']
+                        };
+
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+                        chart.draw(data, options);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+        function openEcoNav(EcoDate) {
+            const element = document.getElementById("chartli");
+            if (element.classList.contains("active") == false) {
+                document.getElementById("Charta").click();
+            }
+            //document.getElementById("sidenavgraph").style.width = "250px";
+            //document.getElementById("movesidebar").style.marginRight = "250px";
+            //document.getElementById("sidebar1").style.marginRight = "250px";
+            $('#GraphDiv').html("");
+            $('#GraphDiv').append('<div id="Barchart1" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="BarchartTable1"  style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="Barchart2" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="BarchartTable2"  style="padding:5px;"></div>');
+            sleep(1000);
+            var ecoDate = EcoDate;
+            var data = ecoDate.split(',');
+
+
+            $.ajax({
+                type: "POST",
+                url: "TigramGIS.aspx/Sales",
+                data: JSON.stringify({ EcoShopId: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processData: false,
+                success: function (Ccnt) {
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawConstChart);
+                    function drawConstChart() {
+                        var Cdata = google.visualization.arrayToDataTable(Ccnt.d);
+                        var SalesCountview = new google.visualization.DataView(Cdata);
+                        SalesCountview.setColumns([0, 1,
+                            {
+                                calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation"
+                            }]);
+                        var SalesConstCountOptions = {
+                            title: "Sales Amount",
+                            colors: ['#3fa9a1'],
+                            legend: { position: "none" },
+                        };
+
+                        var ConstCountchart = new google.visualization.ColumnChart(document.getElementById("Barchart1"));
+                        ConstCountchart.draw(SalesCountview, SalesConstCountOptions);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+            var from = $('#ContentPlaceHolder1_txtFromDate2').val();
+            var to = $('#ContentPlaceHolder1_txtToDate2').val();
+            //Invoice Bar Chart
+            $.ajax({
+                type: "POST",
+                url: "TigramGIS.aspx/Invoice",
+                data: JSON.stringify({ EcoShopId: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processData: false,
+                success: function (Ccnt) {
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawConstChart);
+                    function drawConstChart() {
+                        var Cdata = google.visualization.arrayToDataTable(Ccnt.d);
+                        var InvoiceCountview = new google.visualization.DataView(Cdata);
+                        InvoiceCountview.setColumns([0, 1,
+                            {
+                                calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation"
+                            }]);
+                        var InvoiceConstCountOptions = {
+                            title: "Invoice Count",
+                            colors: ['#cf5151'],
+                            legend: { position: "none" },
+                        };
+
+                        var InvoiceCountchart = new google.visualization.ColumnChart(document.getElementById("Barchart2"));
+                        InvoiceCountchart.draw(InvoiceCountview, InvoiceConstCountOptions);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+        function openVSSNav(VSSData, name) {
+            const element = document.getElementById("chartli");
+            if (element.classList.contains("active") == false) {
+                document.getElementById("Charta").click();
+            }
+            //document.getElementById("sidenavgraph").style.width = "250px";
+            //document.getElementById("movesidebar").style.marginRight = "250px";
+            //document.getElementById("sidebar1").style.marginRight = "250px";
+            $('#GraphDiv').html("");
+            $('#GraphDiv').append('<div id="piechart1" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechartTable1"  style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechart2" style="padding:5px;"></div>');
+            $('#GraphDiv').append('<div id="piechartTable2"  style="padding:5px;"></div>');
+            sleep(1000);
+            var vssData = VSSData;
+            var data = vssData.split(',');
+            $.ajax({
+                type: "POST",
+                async: "false",
+                url: "TigramGIS.aspx/VSSAcknoledments",
+                data: JSON.stringify({ VSS: name, PCName: '', Range: data[1], Division: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    debugger;
+                    console.log(r.d);
+                    var tData = r.d.split(',');
+                    var Applied = parseInt(tData[0]);
+                    var Approved = parseInt(tData[1]);
+                    var Rejected = parseInt(tData[2]);
+                    var Pending = parseInt(tData[3]);
+
+                    //$("#piechartTable1").html("<table class='table table-bordered table-striped'><tbody><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td>Applied</td><td>" + tData[0] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Approved</td><td>" + tData[1] + "</td></tr><tr style='background-color:#539CCC;color:white;text-align:center;font-size: 13px;font-weight:bold'><td >Rejected</td><td>" + tData[2] + "</td></tr><tr style='background-color:#f9f9f9;color:black;text-align:center;font-size: 13px;font-weight:bold'><td >Pending</td><td>" + tData[3] + "</td></tr></tbody></table>");
+
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        debugger;
+                        var data = google.visualization.arrayToDataTable([
+                            ["Category", "Total"],
+                            ["Applied", Applied],
+                            ["Approved", Approved],
+                            ["Rejected", Rejected],
+                            ["Pending", Pending]
+                        ]);
+
+                        //var options = { title: 'Generated Construction Notices', colors: ['#fd7e14'] };
+                        var options = {
+                            title: "VSS Acknowledgement",
+                            pieSliceText: 'value',
+                            position: 'top',
+                            pieHole: 0.3,
+                            height: 300,
+                            width: 250,
+                            legend: { position: 'bottom', textStyle: { color: 'blue', fontSize: 7 } },
+                            colors: ['blue', 'green', 'red', 'orange']
+                        };
+
+                        // Instantiate and draw the chart.
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+                        chart.draw(data, options);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                async: "false",
+                url: "TigramGIS.aspx/TransitChart",
+                data: JSON.stringify({ VSS: name, Range: data[1], Division: data[0] }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "Json",
+                success: function (data, textStatus, xhr) {
+
+                    console.log(data.d);
+
+                    var tData = data.d.split(',');
+                    var Applied = parseInt(tData[0]);
+                    var Approved = parseInt(tData[1]);
+                    var Rejected = parseInt(tData[2]);
+                    var Pending = parseInt(tData[3]);
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+
+                    function drawChart() {
+                        var dataCount = google.visualization.arrayToDataTable([
+                            ["Category", "Total"],
+                            ["Applied", Applied],
+                            ["Approved", Approved],
+                            ["Rejected", Rejected],
+                            ["Pending", Pending]
+                        ]);
+                        var optionsStatus = {
+                            title: "VSS Transit Pass",
+                            pieSliceText: 'value',
+                            position: 'top',
+                            pieHole: 0.3,
+                            height: 300,
+                            width: 250,
+                            legend: { position: 'bottom', textStyle: { color: 'blue', fontSize: 7 } },
+                            colors: ['blue', 'green', 'red', 'orange']
+                        };
+
+                        var chart2 = new google.visualization.PieChart(document.getElementById('piechart2'));
+                        chart2.draw(dataCount, optionsStatus);
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                }
+            });
+        }
+
+    </script>
+        </div>
+    </form>
+</body>
+</html>
+{% endblock %}

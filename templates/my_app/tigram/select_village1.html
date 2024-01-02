@@ -1,0 +1,437 @@
+{% extends 'my_app/tigram/top_band_cont.html' %}
+{% load static %}
+{% block content %}
+<html>
+<head>
+	<!-- Add jQuery library -->
+    {% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> {% endcomment %}
+    <!-- Add Select2 library -->
+    <script src="{% static 'js/ajax.js' %}"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> {% endcomment %}
+<script src="{% static 'js/ajax.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+
+
+*{ margin:0px; padding:0px; text-decoration:none; list-style:none; font-weight:normal; box-sizing:border-box;}
+
+body{
+ /*font-family: 'Cairo', sans-serif;*/
+background:#fff;
+background-image:url('{% static "images/bg_12.jpg" %}');
+background-repeat:no-repeat;
+background-position:center center;
+background-attachment:fixed;
+min-height:100vh;
+background-size:cover;
+}
+.clearfix{
+clear:both;
+}
+/*.top_band{
+height:50px;
+display:flex;
+align-items:center;
+padding:0px 20px;
+justify-content:space-between;
+}*/
+/*.top_band .links a{
+margin:0px 10px;
+text-decoration:underline;
+}
+.top_band button{
+cursor:pointer;
+}*/
+.cont{
+width:100%;
+/*background-image:url("{% static 'images/bg_03.jpg' %}");*/
+/*background-image:url("{% static 'images/q2.jpg' %}");*/
+background-repeat:no-repeat;
+/*background-position:center center;*/
+width:100%;
+overflow-y: auto;
+padding-top:calc(50vh - 220px);
+}
+
+.pro_form{
+width:400px;
+background:rgba(255,255,255,0.9);
+margin:auto;
+}
+.pro_form .title{
+padding:10px 20px;
+font-size:16px;
+border:1px solid #ccc; 
+text-transform:uppercase;
+font-weight:bold;
+margin-bottom:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#fff;
+text-align:center;
+}
+.pro_form .title span{
+font-weight:bold;
+}
+.edit_btn{
+background:#efefef;
+padding:5px 10px;
+cursor:pointer;
+box-shadow:1px 1px 5px #ccc;
+}
+.edit_btn:hover{
+background:#000;
+color:#fff;
+}
+.user_img{
+width:150px;
+height:150px;
+border-radius:50%;
+overflow:hidden;
+margin:auto;
+margin-bottom:20px;
+position:relative;
+}
+.edit_img{
+position:absolute;
+top:calc(75px - 20px);
+left:calc(75px - 20px);
+background:none;
+border:none;
+cursor:pointer;
+outline:none;
+opacity:0.5;
+}
+.edit_img:hover{
+opacity:1;
+}
+.user_img img{
+width:100%;
+}
+.user_details{
+padding:0px 20px;
+margin-bottom:30px;
+}
+
+.user_details .lbl{
+width:100px;
+float:left;
+font-weight:700;
+font-size:14px;
+margin-top:8px;
+}
+.user_details .input_box{
+width:100%;
+margin-bottom:20px;
+}
+.user_details .input_box input,.user_details .input_box textarea{
+width:100%;
+padding:7px;
+font-family: 'Cairo', sans-serif;
+font-size:16px;
+line-height:22px;
+outline:none;
+border:1px solid #ccc;
+background:#fff;
+}
+.user_details .input_box textarea{
+height:105px;
+resize:none;
+padding:7px;
+margin-bottom:10px;
+font-size:16px;
+line-height:22px;
+}
+/*.top_band button{
+background:none;
+border:none;
+font-size:16px;
+}*/
+.cancel_update{
+text-align:center;
+margin-bottom:10px;
+}
+.cancel_update button{
+background:none;
+border:none;
+padding:7px 15px;
+color:#fff;
+text-transform:uppercase;
+margin:0px 10px;
+cursor:pointer;
+cursor:pointer;
+box-shadow:1px 1px 5px #ccc;
+font-weight:700;
+font-size:14px;
+}
+.cancel_btn{
+background:#000 !important;
+
+}
+.update_btn{
+background: #6174ff !important;
+}
+
+.login_btn{
+width:200px;
+}
+
+
+
+.view_mode input,.view_mode textarea{
+} 
+.view_mode .cancel_update{
+display:none;
+}
+.view_mode .edit_img{
+display:none;
+}
+
+.forgot_regis{
+display:flex;
+justify-content:space-between;
+padding:20px;
+}
+.forgot_regis a{
+text-decoration:underline;
+line-height:30px;
+
+}
+.forgot_pass{
+color:red;
+} 
+.regis{
+color:#222;
+}
+@media only screen and (max-width:480px){
+	.cont{
+		padding: 20px !important;
+	}
+	.pro_form {
+    width: 100%;
+	}
+}
+</style>
+<style>
+    /* Add some styles to the div with the class 'input_box' */
+    .input_box {
+        margin-bottom: 20px;
+    }
+
+    /* Style the 'Select User Type' text */
+    .input_box span {
+        font-weight: bold;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    /* Style the dropdown itself */
+    .input_box select {
+        width: 200px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #555;
+    }
+    .species_columns {
+    column-count: 2;
+    column-gap: 20px; /* Adjust the gap between columns as needed */
+    }
+</style>
+        <style>
+    .additional_content {
+        display: none;
+        margin-top: 20px;
+        margin-bottom:20px;
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .additional_content .species_list {
+        margin-bottom: 10px;
+    }
+
+    .additional_content .species_list p {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+    .additional_content .species_list ul {
+        list-style: disc;
+        margin-left: 20px;
+    }
+
+    .additional_content .species_list li {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .additional_content .question p {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .additional_content .question label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .additional_content .question input[type='radio'] {
+        margin-right: 5px;
+    }
+</style>
+
+
+<script>
+</script>
+
+</head>
+
+<body>
+<form  method="POST">
+            {% csrf_token %}
+<div class="cont">
+	<div class="pro_form ">
+		<div class="title warn" style="color: red;"><span></span> </div>
+		<div class="title"><span>User Login</span> </div>
+		<div class="user_details">
+			<div class="input_box">
+                        <label for="vil" class="required"><b>Village:</b></label>
+                        <select name="village" id="village" class="village" required>
+                            <option value="">Select village</option>
+                            <option value="Thennur">Thennur</option>
+                            <option value="Vidura">Vidura</option>
+                            <option value="Tholicode">Tholicode</option>
+                            <option value="Mannurkara">Mannurkara</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="additional_content" style="display: none;">
+                    <div class="species_list">
+                        <p><b>Species Names:</b></p>
+                          <div class="species_columns">
+                            <p>Coconut</p>
+                            <p>Rubber</p>
+                            <p>Cashew</p>
+                            <p>Tamarind</p>
+                            <p>Mango</p>
+                            <p>Jack Fruit Tree</p>
+                            <p>Kodampuli</p>
+                            <p>Matti</p>
+                            <p>Arecanut</p>
+                            <p>Konna</p>
+                            <p>Seema Konna</p>
+                            <p>Nelli</p>
+                            <p>Neem</p>
+                            <p>Murukku</p>
+                            <p>Jathi</p>
+                            <p>Albezia</p>
+                            <p>Silk cotton</p>
+                            <p>Acacia auraculiformis</p>
+                            <p>Mangium</p>
+                            <p>Anhili</p>
+                            <p>Kilimaram</p>
+                            <p>Manchadimaram</p>
+                            <p>Vatta</p>
+                            <p>Palm tree</p>
+                            <p>Aranamaram</p>
+                            <p>Eucalyptus</p>
+                            <p>Seemaplavu</p>
+                            <p>Paala</p>
+                          </div>
+                    </div>
+                    <div class="question">
+                        <p><b>Is Your Species Are In The Above List?</b></p>
+                        <label>
+                            <input type="radio" name="proceed" value="yes"> Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="proceed" value="no"> No
+                        </label>
+                    </div>
+                    <div class="additional_content_for_no" style="display: none;">
+                        <div class="question">
+                            <p><b>Extent of land is below 1 Ha:</b></p>
+                            <label>
+                                <input type="radio" name="reason" value="unaware"> Yes
+                            </label>
+                            <label>
+                                <input type="radio" name="reason" value="not_required"> No
+                            </label>
+                            <!-- Add more options for the reason if needed -->
+                        </div>
+                    </div>
+
+                </div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="cancel_update">
+			<button type="submit" class="update_btn login_btn">submit</button>
+		</div>
+
+		<div class="clearfix"></div>
+	</div>
+</div>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $("#village").select2({
+            placeholder: "Select village",
+            allowClear: true,
+        });
+
+        $("#village").change(function() {
+            var selectedVillage = $(this).val();
+            var notifiedVillages = ["Tholicode", "Mannurkara"];
+            if (notifiedVillages.includes(selectedVillage)) {
+                $(".additional_content").show();
+                $(".additional_content_for_no").hide();
+            } else {
+                $(".additional_content").hide();
+                $(".additional_content_for_no").show();
+
+            }
+        });
+
+        // Handle form submission
+        $("form").submit(function(event) {
+            var selectedVillage = $("#village").val();
+            var notifiedVillages = ["Tholicode", "Mannurkara"];
+            if (notifiedVillages.includes(selectedVillage)) {
+                var selectedOption = $(".additional_content input[type='radio']:checked").val();
+                if (selectedOption === "yes") {
+                    // Show the pop-up message for 'yes' option
+                    swal("Pop-up Message", "As per Section 6(3)(ii) of the The Kerala Promotion of Tree Growth in Non-forest areas Act, 2005, such prior permission is not required for the cutting and removal of trees mentioned in the schedule", "info");
+                } else {
+<!--                    $(".additional_content_for_no").show();-->
+                    // Redirect to 'notified_application_form' page for 'no' option
+                    window.location.href = "{% url 'notified_application_form' %}";
+                }
+            } else {
+                // Redirect to 'application_form' for non-notified villages
+                window.location.href = "{% url 'application_form' %}";
+            }
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+
+</html>
+{% endblock %}

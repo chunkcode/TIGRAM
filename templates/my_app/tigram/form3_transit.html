@@ -1,0 +1,734 @@
+{% extends 'my_app/tigram/top_band_cont.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/viewapplication.css' %}">
+	<!-- <link rel="stylesheet" href="css/viewapplication.css"> -->
+    <!-- <link rel="stylesheet" href="css/dash.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-5.0.0-beta2-dist/css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'bootstrap-5.0.0-beta2-dist/js/bootstrap.min.js' %}"></script> -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<style>
+	.vd_head {
+display:flex;
+justify-content:space-between;
+}
+	.edit_btn {
+    background: #efefef;
+    padding: 5px 10px;
+    cursor: pointer;
+    box-shadow: 1px 1px 5px #ccc;
+	border:1px solid #ccc;
+}
+.edit_btn:hover{
+background:#000;
+color:#fff;
+}
+.view_mode input{
+background:transparent !important;
+border:none !important;
+} 
+	</style>
+  <style>
+    .tree__nested-items {
+list-style-type: none;
+margin: 0;
+padding: 0;
+padding-left: 70px;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+}
+
+.tree__item {
+/* width: 70%; */
+height: 30px;
+line-height: 30px;
+/* border: 2px solid #dedede; */
+/* background-color: #f7f8fa; */
+border-radius: 7px;
+/* padding: 10px 25px; */
+margin: 10px;
+}
+
+.tree__item--nested {
+position: relative;
+}
+
+/* line */
+.tree__item--nested:before {
+content: "";
+position: absolute;
+bottom: 50%;
+/* padding of container - 10px */
+left: -60px;
+/* padding of container - 10px */
+width: 60px;
+/* 3 * half height + half of border radius */
+height: calc(150% + 7.5px);
+border-bottom: inherit;
+border-left: inherit;
+border-bottom-left-radius: 15px;
+/* don't overlap items */
+z-index: -1;
+}
+
+/* arrow */
+.tree__item--nested:after {
+content: "";
+position: absolute;
+/* border-width - 1px */
+left: -8px;
+bottom: calc(50% - 6px);
+border-color: transparent;
+border-left-color: inherit;
+border-style: inherit;
+border-width: 7px;
+}
+table {
+font-family: arial, sans-serif;
+border-collapse: collapse;
+width: 100%;
+}
+
+td, th {
+text-align: left;
+padding: 8px;
+}
+
+tr:nth-child(even) {
+}
+</style>
+</head>
+
+<body>
+    <!-- <nav class="nav">
+        <a href="{% url 'officer_dashboard' %}" class="h6-button" id="icon"><i class="fa fa-chevron-circle-left"></i>&nbsp;&nbsp;Back</a>
+            <div class="right">
+                <a href="{% url 'user_logout' %}" class="h6-button" id="icon"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a>
+                <a href="{% url 'view_profile' request.user.id %}" class="h7-button"><i class="fa fa-user-circle fa-2x"></i></a>
+            </div>
+        </nav> -->
+	<div class="cont_sec cont nice_scroll">	
+		<div class="wrap" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <!-- <h1>Application Details</h1> -->
+        <br>
+        <h1 style="text-align: center;">Application Details</h1>
+    <br>
+    <table class="table2" style="width: 70%;">
+        <tr>
+            <td class="head">Name:</td>
+            <td>{{data.name}}</td>
+        </tr>
+        <tr>
+            <td class="head">Address:</td>
+            <td>{{data.address}}</td>
+        </tr>
+        <tr>
+            <td class="head">Survey No. and extent of the field or fields on which the tree or trees proposed to be
+                cut,uprooted or burnt stand:</td>
+            <td>{{data.survey_no}}</td>
+        </tr>
+        <tr>
+            <td class="head">Name of the Village/Taluka/Block and District where the land on which the tree or trees
+                stand/lie:</td>
+            <td>{{data.village}}</td>
+        </tr>
+        <!--<tr>
+            <td class="head">Proof of ownership of the trees:</td>
+            <td></td>
+        </tr>
+        -->
+        <tr>
+            <td class="head">List showing the species of tree or trees proposed to be cut,etc:</td>
+            <td>{{data.species_of_trees}}</td>
+        </tr>
+        <tr>
+            <td class="head">Purpose for which trees are proposed to be cut,etc:</td>
+            <td>{{data.purpose}}</td>
+        </tr>
+        <!--<tr>
+            <td class="head">Details of generation proposed:</td>
+            <td></td>
+        </tr>
+        -->
+    </table>
+	<br/>
+	<br/>
+  <span id="center"><b>Approved Species and Log Details</b>{% ifequal formtype "edit" %}<a> &nbsp; <i class="fa fa-pencil edit-volume "></i></a>{% endifequal %}</span>
+  <br>
+  <table class="table3" style="width: 70%;">
+      <thead>
+      <tr>
+          <th id="vol">Species</th>
+          <th id="vol">Height(m)</th>
+          <th id="vol">GDH(cm)</th>
+          <th id="vol">Volume</th>
+
+      </tr>
+      </thead>
+
+        <tbody>
+    
+
+        </tr>
+     
+       
+        {% for each in log %}
+        
+        <tr>
+            <td>{{each.species_of_tree}}</td>
+            <td>{{each.length}}</td>
+            <td>{{each.breadth}}</td>
+            <td>{{each.volume}}</td>
+        </tr>
+        {% endfor %}
+      
+        </tbody>
+     
+  </table><br><br><br>
+  
+  <div class="img_gal" style="width: 90%;">
+		<span id="center" style="text-transform:uppercase"><b>Attachments Gallery</b></span>
+		<br/>
+
+            <div class="row" >
+
+ <div class="column">
+    <img  class="img-gallery1" src="{{media_prefix}}/media/upload/proof_of_ownership/{{ data.proof_of_ownership_of_tree }}" style="width:100;" onclick="openModal();currentSlide(1)" class="hover-shadow cursor" id="doc_img_clk"  /><input type="file" hidden name="ownership_proof_img" value="{{ document.ownership_proof_img }}">
+   <div class="txt">Proof Of Ownership</div>
+  </div>
+
+  <div class="column">
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/revenue_approval/{{ img.revenue_approval }}" style="width:100;" onclick="openModal();currentSlide(2)" class="hover-shadow cursor" id="rev_app_img_clk" /><input type="file" hidden name="revenue_approval" value="{{ document.revenue_approval }}">
+  <div class="txt">Land Tax Receipt</div>
+  </div>
+  <div class="column">
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/declaration/{{ img.declaration }}" style="width:100%" onclick="openModal();currentSlide(3)" class="hover-shadow cursor" id="dec_img_clk" /><input type="file" hidden name="declaration" value="{{ document.declaration }}">
+  <div class="txt">Possession Certificate</div>
+  </div>
+
+  <div class="column">
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/aadhar_card/{{ img.aadhar_detail }}" style="width:100%" onclick="openModal();currentSlide(4)" class="hover-shadow cursor" id="aad_img_clk" /><input type="file" hidden name="aadhar_detail" value="{{ document.aadhar_detail }}">
+  <div class="txt">Photo Proof</div>
+  </div>
+</div>
+  <br><br>
+            {% if image_documents.location_img1 != 'no_image.png' %}
+            <span id="center" style="text-transform:uppercase"><b>Tree Location Images</b></span>
+		<br/>
+			<div class="row">
+
+  <div class="column">
+    <img  class="img-gallery1" src="{{media_prefix}}/media/upload/location_img1/{{ img.location_img1 }}" style="width:100;" onclick="openModal();currentSlide(5)" class="hover-shadow cursor"  />
+   <div class="txt">Location 1 Image</div>
+  </div>
+  <div class="column">
+    <img  class="img-gallery1" src="{{media_prefix}}/media/upload/location_img2/{{ img.location_img2 }}" style="width:100;"  onclick="openModal();currentSlide(6)" class="hover-shadow cursor" />
+	 <div class="txt">Location 2 Image</div>
+  </div>
+  <div class="column">
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/location_img3/{{ img.location_img3 }}" style="width:100;" onclick="openModal();currentSlide(7)" class="hover-shadow cursor"  />
+	<div class="txt">Location 3 Image</div>
+  </div>
+  <div class="column">
+    <img class="img-gallery1" src="{{media_prefix}}/media/upload/location_img4/{{ img.location_img4 }}" style="width:100%" onclick="openModal();currentSlide(8)" class="hover-shadow cursor"  />
+	<div class="txt">Location 4 Image</div>
+  </div>
+
+</div>
+
+{% endif %}
+
+<div id="myModal" class="modal">
+  <span class="close cursor" onclick="closeModal()">&times;</span>
+  <div class="modal-content ">
+
+
+          <div class="mySlides">
+              <div class="numbertext">Proof of Ownership</div>
+              <img src="{{media_prefix}}/media/upload/proof_of_ownership/{{ data.proof_of_ownership_of_tree }}" style="width:100%">
+          </div>
+
+    <div class="mySlides">
+      <div class="numbertext">Land Tax Receipt</div>
+      <img src="{{media_prefix}}/media/upload/revenue_approval/{{ img.revenue_approval }}" style="width:100%">
+    </div>
+
+    <div class="mySlides">
+      <div class="numbertext">Possession Certificate</div>
+      <img src="{{media_prefix}}/media/upload/declaration/{{ img.declaration }}" style="width:100%">
+    </div>
+
+       <div class="mySlides">
+          <div class="numbertext">Photo Proof</div>
+          <img src="{{media_prefix}}/media/upload/aadhar_card/{{ img.aadhar_detail }}" style="width:100%">
+       </div>
+       {% if image_documents.location_img1 != 'no_image.png' %}
+      <div class="mySlides">
+      <div class="numbertext">Location 1 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img1/{{ img.location_img1 }}" style="width:100%">
+    </div>
+       <div class="mySlides">
+      <div class="numbertext">Location 2 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img2/{{ img.location_img2 }}" style="width:100%">
+    </div>
+       <div class="mySlides">
+      <div class="numbertext">Location 3 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img3/{{ img.location_img3 }}" style="width:100%">
+    </div>
+       <div class="mySlides">
+      <div class="numbertext">Location 4 Image</div>
+      <img src="{{media_prefix}}/media/upload/location_img4/{{ img.location_img4 }}" style="width:100%">
+    </div>
+    {% endif %}
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+    <div class="caption-container">
+      <p id="caption"></p>
+    </div>
+
+
+   
+  </div>
+</div>
+
+
+
+    </table><br>
+<script>
+function openModal() {
+  document.getElementById("myModal").style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById("myModal").style.display = "none";
+}
+function openModal2() {
+  document.getElementById("myModal2").style.display = "block";
+}
+function closeModal2(){
+  document.getElementById("myModal2").style.display = "none";
+}
+function openModal3() {
+  document.getElementById("map_content").style.display = "block";
+}
+    function closeModal3(){
+  document.getElementById("map_content").style.display = "none";
+}
+var slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("demo");
+  var captionText = document.getElementById("caption");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+  captionText.innerHTML = dots[slideIndex-1].alt;
+}
+</script>
+
+          
+		
+		
+		
+        
+                
+                <td></td>
+            </tr>
+        </table>
+        
+		<br>
+		<br>
+    {% comment %} {% if log %}
+    No DATA
+    {% endif %} {% endcomment %}
+    <form enctype="multipart/form-data" action="{% url "add_transit" data.id %}" method="post" id="form-id">
+      {% csrf_token %}
+    <span id="center"><b>Add Products from logs to transit</b>{% ifequal formtype "edit" %}<a> &nbsp; <i class="fa fa-pencil edit-volume "></i></a>{% endifequal %}</span>
+
+          {% for each in log %}
+          <div style="width: 70%;">
+            <div style="display: flex; flex-direction: row; align-items: center; ">
+            <table class="tree__item">
+              <thead>
+                <tr>
+                    <th id="vol">Species</th>
+                    <th id="vol">Height(m)</th>
+                    <th id="vol">GDH(cm)</th>
+                    <th id="vol">Volume</th>
+                 
+                </tr>
+                </thead>
+              <tbody>
+                  <tr>
+                    <td>{{each.species_of_tree}}</td>
+                    <td>{{each.length}}</td>
+                    <td>{{each.breadth}}</td>
+                    <td>{{each.volume}}</td>
+                   
+                  </tr>
+                </tbody>
+          </table>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" onclick="addproduct({{each.id}})" class="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+          </svg></div>
+        <ul class="tree__nested-items" id="{{each.id}}" >
+        </ul>
+      </div>
+          {% endfor %}
+          
+          
+          <input type="text" name="pro_data" id="pro_data" readonly style="display: none;">
+
+        </div>
+<br><br>
+        
+      <label for="district" ><b>Destination District: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></label>
+      <select name="district" id="district" style="font-size: 17px; width: 50%;" required>
+          <option value="">Select District</option>
+          <option value="Alapuzha">Alapuzha</option>
+          <option value="Ernakulam">Ernakulam</option>
+          <option value="Idukki">Idukki</option>
+          <option value="Kannur">Kannur</option>
+          <option value="Kasargode">Kasargode</option>
+          <option value="Kollam">Kollam</option>
+          <option value="Kottayam">Kottayam</option>
+          <option value="Kozhikode">Kozhikode</option>
+          <option value="Malappuram">Malappuram</option>
+          <option value="Palakkad">Palakkad</option>
+          <option value="Pathanamthitta">Pathanamthitta</option>
+          <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+          <option value="Thrissur">Thrissur</option>
+          <option value="Wayanad">Wayanad</option>
+      </select>
+      <br>
+      <br>
+      <label for="district"><b>Destination (Location): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></label>
+<input name="destination" id="destination" type="text" style="width: 50%;" required>
+<br>
+{% comment %} <label for="v_used" class="required"><b>Vehicle Used: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></label>
+<input name="v_used" id="v_used" type="text" >
+<br>
+<label for="v_reg" class="required"><b>Vehicle Registration Number: &nbsp;</b></label>
+<input name="v_reg" id="v_reg" type="text" >
+<br>
+<label for="v_d_name" class="required"><b>Name of the driver: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></label>
+<input name="v_d_name" id="v_d_name" type="text" >
+<br>
+<label for="v_d_num" class="required"><b>Phone Number of the Driver:&nbsp;&nbsp;</b></label>
+<input name="v_d_num" id="v_d_num" type="text" >
+<br>
+<label for="v_d_image" class="required"><b>Driver License Image: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></label>
+<input name="v_d_image" id="v_d_image" type="file"> {% endcomment %}
+<br>
+
+<div class="terms_conditions">
+  <input type="checkbox" id="terms_checkbox" onclick="terms()" required>
+  <label for="terms_checkbox">I agree to the terms and conditions</label>
+  <br>
+  
+     <script>
+      function terms(){
+        var ch_data = document.getElementById("pro_data").value
+        if(ch_data == "" || ch_data == "[]"){
+          $('#terms_checkbox').prop('checked', false); // Unchecks it
+
+     swal("Please add atleast one product to apply for Transit Pass")
+        }
+        else{
+           if(document.getElementById('terms_checkbox').checked){
+            swal({
+                                title: "Terms & Conditions",
+                                text: "I hereby declare that the information furnished above is true to the best of my knowledge and belief. I also undertake to comply with the conditions subject to which the permission may be granted by the Authorised officer.",
+                                icon: "info",
+                                button: "Close",
+                            });
+             }
+       }
+       }
+     </script>
+</div>
+<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+  <input type="submit" class="btn btn-info" value="Apply Transit Pass">
+<br><br><br>
+</div>
+      </form>
+    
+</div>
+	</div>
+</body>
+<script type="text/javascript">
+
+   
+$(document).ready(function(){
+  $('#veh-cancel-btn').hide();
+  $('#veh-cancel-btn').click(function(){
+    $(".vd_form").toggleClass("view_mode");
+     $("#veh-edit-btn").text('Edit');
+      $(".view_mode input").each(function(){
+      $(this).attr('readonly',true);
+      document.getElementById("phone_no-error").innerHTML = "";
+      $("#veh-edit-btn").show();
+    });
+      $('#veh-cancel-btn').hide();
+  });
+   $(".vd_form input").each(function(){
+      $(this).attr('readonly',true);
+    });
+  $("#veh-edit-btn").click(function(){
+    if($("#veh-edit-btn").text()=='Save'){
+    saveVehicle();
+    }
+    $(".vd_form").toggleClass("view_mode");
+    if ($(".vd_form").hasClass("view_mode")){
+    $(".view_mode input").each(function(){
+      $(this).attr('readonly',true);
+    });
+      $('#veh-cancel-btn').hide();
+    $("#veh-edit-btn").text('Edit');
+    }
+    else{
+      $(".vd_form input").each(function(){
+      $(this).attr('readonly',false);
+    });
+    $('#veh-cancel-btn').show();
+    $("#veh-edit-btn").text('Save');
+
+
+    }
+  });
+  // $(".view_mode input").attr("href", "{% static 'js/jquery-3.6.0.js' %}");
+  document.getElementByClassName("view_mode").disabled = true;
+});
+
+
+    if ('{{transit_pass_exist}}' == 'True'){
+        $('.couldapprove').hide( );
+        // $("#reason").hide();
+    }
+    var frm = $('#contactForm1');
+    // $('.couldapprove').click(function(){
+</script>
+
+<script>
+  function del(e){
+    e.parentElement.parentElement.remove()
+    $('#terms_checkbox').prop('checked', false);
+  }
+</script>
+  <script>
+      function addproduct(e){
+          var parent = document.getElementById(e)
+          
+          var ch = document.createElement('table')
+          ch.classList.add("tree__item")
+          ch.classList.add("tree__item--nested")
+          ch.innerHTML = '<div id="123" style="display: flex; flex-direction: row; background-color: none; align-items: center;  justify-content: left;"><select name="product_type" required id='+e+' onchange="change_metrics(this)" style="width:250px;" ><option value="">Select a Product type</option><option value="Log">Round log</option><option value="Firewood">Firewood</option><option value="cuttings">Sawn Size</option></select>&nbsp;&nbsp;&nbsp;<input type="number" name="swan_length" id="123_length"  onchange="uploads()" placeholder=" Length (m)" style="text-align: center; display: none;  border: none;   width: 20%; height: 10%;" ><input type="number" name="swan_breadth" id="123_length"  onchange="uploads()" placeholder=" Breadth (m)" style="text-align: center; display: none;  border: none;   width: 20%; height: 10%;" ><input type="number" name="swan_height" id="123_length"  onchange="uploads()" placeholder=" Height (m)" style="text-align: center; display: none;  border: none;   width: 20%; height: 10%;" ><input type="number" name="product_length" id="123_length"  onchange="uploads()" placeholder=" Height (m)" style="text-align: center; display: none;  border: none;   width: 20%; height: 10%;" ><input type="number" name="product_width"  id="123_width" onchange="uploads()" placeholder="MDH (cm)" style="text-align: center; display: none; border: none;   width: 20%; height: 10%;"><input type="number" name="product_weight"  id="123_weight" onchange="uploads()" placeholder="Weight (MT)" style=" text-align: center; display: none; border: none;   width: 20%; height: 10%;"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" onclick="del(this),uploads()"  fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/></svg>'
+          parent.appendChild(ch)
+      }
+      function delproduct(e){
+          var parent = e.parentElement.parentElement.parentElement.parentElement
+          console.log(parent)
+          parent.remove();
+      }
+  </script>
+   <script>
+     function uploads(){
+         let full_data = []
+         let types = document.getElementsByName("product_type")
+         types.forEach(function (item) {
+          if(item.value == "Log"){
+            let sub_data = {}
+            sub_data['timber_id'] = item.id
+            sub_data['product_type'] = item.value
+            sub_data['height'] = item.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value
+            sub_data['mdh'] = item.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value
+            full_data.push(sub_data)
+            
+            
+          }
+          else if(item.value == "Firewood"){
+            let sub_data = {}
+            sub_data['timber_id'] = item.id
+            sub_data['product_type'] = item.value
+            sub_data['weight'] = item.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value
+            full_data.push(sub_data)
+            
+            
+          }
+          else if(item.value == "cuttings"){
+            let sub_data = {}
+            sub_data['timber_id'] = item.id
+            sub_data['product_type'] = item.value
+            sub_data['length'] = item.nextElementSibling.value
+            sub_data['breadth'] = item.nextElementSibling.nextElementSibling.value
+            sub_data['height'] = item.nextElementSibling.nextElementSibling.nextElementSibling.value
+            full_data.push(sub_data)
+          }
+          else{
+            swal("Process failed please refill form")
+          }
+       
+          });
+          document.getElementById("pro_data").value = JSON.stringify(full_data)
+          
+        
+     }
+
+
+
+
+
+     function change_metrics(e){
+          
+          if (e.value == "Log")
+          {
+              e.nextElementSibling.value = ""
+              e.nextElementSibling.nextElementSibling.value = ""
+              e.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+              e.nextElementSibling.style.display = "none"
+              e.nextElementSibling.required = false
+              e.nextElementSibling.nextElementSibling.style.display = "none"
+              e.nextElementSibling.nextElementSibling.required = false
+              e.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+              e.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "block"
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = true
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "block"
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = true
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+              e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+              
+          }
+          else if(e.value == "Firewood")
+          {
+            e.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.style.display = "none"
+            e.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "block"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = true
+             
+          }
+          else if(e.value == "cuttings")
+          {
+            e.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.style.display = "block"
+            e.nextElementSibling.required = true
+            e.nextElementSibling.nextElementSibling.style.display = "block"
+            e.nextElementSibling.nextElementSibling.required = true
+            e.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "block"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.required = true
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+             
+
+              
+          }
+          else if(e.value == "")
+          {
+            e.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.value = ""
+            e.nextElementSibling.style.display = "none"
+            e.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.style.display = "none"
+            e.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.required = false
+             
+
+          }
+          
+      }
+  
+</script>
+
+{% comment %} <script type="text/javascript">
+  window.history.forward();
+  function noBack() {
+      window.history.forward();
+  }
+</script> {% endcomment %}
+<script>  
+  $(window).ready(function() { 
+  $("#form-id").on("keypress", function (event) { 
+      console.log("aaya"); 
+      var keyPressed = event.keyCode || event.which; 
+      if (keyPressed === 13) { 
+          document.getElementById("pro_data").value = ""
+          // alert("Please subm!!"); 
+          swal("Submit the form manually, without pressing Enter key")
+          event.preventDefault(); 
+          return false; 
+      } 
+  }); 
+  }); 
+
+</script>  
+</html>
+{% endblock %}

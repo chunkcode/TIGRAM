@@ -1,0 +1,799 @@
+
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <title>Leaflet Tutorial</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link href="Content/leaflet.css" rel="stylesheet" />
+    <link href="Content/leaflet-sidebar.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+
+    <!-- leaflet css  -->
+
+<!--     <script src="Scripts/jquery-3.4.1.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .coordinate {
+            position: absolute;
+            bottom: 10px;
+            right: 50%;
+        }
+
+        .leaflet-popup-content-wrapper {
+            background-color: #000000;
+            color: #fff;
+            border: 1px solid red;
+            border-radius: 0px;
+        }
+        .wrapper {
+            position: relative !important;
+        }
+
+        .content-wrapper {
+            min-height: unset !important;
+        }
+
+        #map {
+            height: calc(100vh - 42.64px);
+            cursor: pointer;
+        }
+
+        .content-wrapper > .content {
+            padding: 0;
+        }
+
+        .leaflet-control-coordinates {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+            cursor: pointer;
+            padding: 2px 5px;
+        }
+
+            .leaflet-control-coordinates.hidden {
+                display: none;
+            }
+
+        .leaflet-control-coordinates-lng {
+            padding-left: 5px;
+        }
+
+        .leaflet-bottom .leaflet-control {
+            /*margin-bottom: 10px;*/
+        }
+
+        .leaflet-right {
+            right: 25px;
+        }
+
+        /*Zoom home*/
+        .leaflet-control-zoomhome a {
+            font: bold 18px "Lucida Console",Monaco,monospace;
+        }
+
+        a.leaflet-control-zoomhome-in,
+        a.leaflet-control-zoomhome-out {
+            font-size: 1.5em;
+            line-height: 26px;
+        }
+
+        /*Legend specific*/
+        .legend {
+            padding: 6px 8px;
+            font: 14px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.9);
+            /*box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);*/
+            /*border-radius: 5px;*/
+            line-height: 24px;
+            color: #555;
+        }
+
+
+            .legend h4 {
+                text-align: center;
+                // font-size: 16px;
+                margin: 2px 12px 8px;
+                color: #000000;
+            }
+
+            .legend span {
+                position: relative;
+                bottom: 3px;
+            }
+
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin: 0 8px 0 0;
+                opacity: 0.7;
+            }
+
+                .legend i.icon {
+                    background-size: 18px;
+                    background-color: rgba(255, 255, 255, 1);
+                }
+
+
+
+        /*Layer datalist Tree*/
+        ul, #Layers {
+            list-style-type: none;
+        }
+
+        #Layers {
+            margin: 0;
+            padding: 0;
+        }
+
+        .box {
+            cursor: pointer;
+            -webkit-user-select: none; /* Safari 3.1+ */
+            -moz-user-select: none; /* Firefox 2+ */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none;
+            border-top: 0px !important;
+            box-shadow: none !important;
+        }
+
+            .box::before {
+                content: "\26B6";
+                color: black;
+                display: inline-block;
+                margin-right: 6px;
+                /*-ms-transform: rotate(90deg);
+                -webkit-transform: rotate(90deg);
+                transform: rotate(90deg);
+                content: "\25B6";*/
+                content: "\26B6";
+                color: dodgerblue;
+                font-size: 18px;
+                background: none !important;
+            }
+
+        .check-box::before {
+            -ms-transform: rotate(-90deg); /* IE 9 */
+            -webkit-transform: rotate(-90deg); /* Safari */
+            transform: rotate(-90deg);
+            content: "\26B6";
+            color: black;
+            font-size: 18px;
+        }
+
+        .nested {
+            display: active;
+        }
+
+        .active1 {
+            display: none;
+        }
+
+        .sidenavgraph {
+            height: 92vh;
+            width: 0;
+            position: absolute;
+            z-index: 1;
+            /*top: 0;*/
+            right: 0;
+            background-color: #ececec;
+            overflow-x: hidden;
+            transition: none;
+            padding-top: 60px;
+        }
+
+            .sidenavgraph a {
+                /*padding: 8px 8px 8px 32px;*/
+                text-decoration: none;
+                font-size: 25px;
+                color: #818181;
+                display: block;
+                transition: 0.3s;
+            }
+
+                .sidenavgraph a:hover {
+                    color: #f1f1f1;
+                }
+
+            .sidenavgraph .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+        .table td, .table th {
+            padding: 10px !important;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenavgraph {
+                padding-top: 15px;
+            }
+
+                .sidenavgraph a {
+                    font-size: 18px;
+                }
+        }
+
+    </style>
+</head>
+
+<body>
+<form method="post" action="" id="form1">
+
+
+
+    <div  >
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="5qXz+0nPDOs6VN2TlZD/vhFQzm4IL6J9arppGsKwUfgcHfWVUUmO2AB0llKYXmVr6aXdc2axUXyW98ja702JD/uaGa8l1RlYDCnD/+JVMlYAaWqM6cby7YaC01lw1y5UFbs8WBFjdrWnrU/V58YwJA==" />
+</div>
+    <script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+    <div>
+
+        <div id="map" class="easyPrint sidebar1-map">
+        <div style="position: absolute; z-index: 999; background-color: aliceblue;">
+
+             <div id="sidebar1" class="sidebar1 collapsed" style="bottom: 100px !important; z-index: 999">
+        <!-- Nav tabs -->
+        <div class="sidebar1-tabs">
+            <ul role="tablist">
+                <li><a href="#Search" style="margin-top: 10px" data-toggle="tooltip" title="Search" role="tab"><i class="fa fa-search"></i></a></li>
+                <li><a href="#LayerList" style="margin-top: 10px" data-toggle="tooltip" title="Layer List" role="tab">
+                    <img src="https://cdn.onlinewebfonts.com/svg/img_520292.png'" style="width: 20px; height: 20px;"></a></li>
+                <li><a href="#Legend" style="margin-top: 10px" data-toggle="tooltip" title="Legend" role="tab"><i class="fa fa-list"></i></a></li>
+
+            </ul>
+        </div>
+        <!-- Tab panes -->
+        <div class="sidebar1-content">
+
+
+
+            <div class="sidebar1-pane" id="LayerList">
+                <h1 class="sidebar1-header">Layer List<span class="sidebar1-close"><i class="fas fa-layer-group"></i></span></h1>
+                <br />
+                <ul id="Layers">
+                    <li>
+                        <span class="box"><b style="font-size: 18px">Base Layers</b></span>
+                        <ul class="nested" style="font-size: 14px; margin-top: 5px">
+                            <li>
+                                <input type="radio" checked="checked" id="rbGoogleStreet" name="btnGroup" onclick="fnText('GoogleStreet')" /><label for="rbGoogleStreet">&nbsp;Google Street</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbGoogleHybrid" name="btnGroup" onclick="fnText('GoogleHybrid')" /><label for="rbGoogleHybrid"> &nbsp;Google Hybrid</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbGoogleTerrain" name="btnGroup" onclick="fnText('GoogleTerrain')" /><label for="rbGoogleTerrain"> &nbsp;Google Terrain</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbOpenStreet" name="btnGroup" onclick="fnText('OpenStreetMap')" /><label for="rbOpenStreet">&nbsp;Open Street</label>
+                            </li>
+                            <li>
+                                <input type="radio" id="rbOpenTopo" name="btnGroup" onclick="fnText('OpenTopoMap')" /><label for="rbOpenTopo"> &nbsp;Open Topo</label>
+                            </li>
+
+                            <li>
+                                <input type="radio" id="rbEsriWorldStreet" name="btnGroup" onclick="fnText('EsriWorldStreet')" /><label for="rbEsriWorldStreet">
+                                    &nbsp;
+                                    Esri World Street</label>
+                            </li>
+                        </ul>
+                    </li>
+                    <br />
+                    <li>
+                        <span class="box"><b style="font-size: 18px">Overlay Map Layers</b></span>
+                        <ul class="nested" style="font-size: 14px; margin-top: 5px">
+                            <li>
+                                <span class="box"><b style="font-size: 16px">Administrative Layers</b></span>
+                                <ul class="nested">
+                                    <li>
+                                        <input type="checkbox" id="checkBlock" onclick="fnText('ForestPlusBlocks')" /><label for="checkBlock"> &nbsp;Circle</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="checkDivision" checked="checked" onclick="fnText('ForestPlusDivision')" /><label for="checkDivision"> &nbsp;Division</label>
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" id="checkRange" onclick="fnText('ForestPlusRange')" /><label for="checkRange"> &nbsp;Range</label>
+                                    </li>
+                                     <li>
+                                        <input type="checkbox" id="checkBlocks" onclick="fnText('ForestPluscheckBlocks')" /><label for="checkBlocks"> &nbsp;Blocks</label>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li>
+                                <span class="box"><b style="font-size: 16px; margin-top: 5px">Markers</b></span>
+                                <ul class="nested">
+                                    <li>
+                                        <input type="checkbox" id="checkDFO" /><label for="checkDFO">&nbsp;Division</label>
+                                    </li>
+
+                                    <li>
+                                        <input type="checkbox" id="checkRFO" /><label for="checkRFO">&nbsp;Range</label>
+                                    </li>
+
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+
+<!--            <div class="sidebar1-pane" id="Charts">-->
+<!--                <h1 class="sidebar1-header">Charts<span class="sidebar1-close"><i class="fa fa-chart-area"></i></span></h1>-->
+<!--                <br />-->
+<!--                <ul id="ChartsList" style="padding-left: 0px;">-->
+<!--                    <li>-->
+<!--                        <div id="GraphDiv" style="width: 70%">-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+        </div>
+    </div>
+        </div>
+
+    </div>
+        </div>
+</form>
+</body>
+
+</html>
+
+<!-- leaflet js  -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="./data/point.js"></script>
+<script src="./data/line.js"></script>
+<script src="./data/polygon.js"></script>
+
+
+<script>
+    // Map initialization
+
+    var toggler = document.getElementsByClassName("box");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".nested").classList.toggle("active1");
+                this.classList.toggle("check-box");
+            });
+        }
+
+       var OpenStreet = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            id: 'mapbox/streets-v11', attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            // maxZoom: 20,
+        });
+
+        var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            //  maxZoom: 20,
+            attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        });
+
+        var Esri_WorldStreetMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            // maxZoom: 20,
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+        });
+
+        var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            // maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+        var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            //maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+       var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+            // maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+
+        var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            // maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        });
+
+
+        var id = 100;
+        document.getElementById('' + id + '')
+
+        // Administrative Layers
+
+        var ForestPlusDivision = new L.tileLayer.wms('http://15.207.105.77:8080/geoserver/ne/wms?service=WMS&', {
+            layers: 'division',
+            format: 'image/png',
+            transparent: true
+
+        });
+        var ForestPlusRange = new L.tileLayer.wms('http://15.207.105.77:8080/geoserver/ne/wms?service=WMS&', {
+            layers: 'range',
+            format: 'image/png',
+            transparent: true
+
+        });
+
+        var ForestPlusBlocks = new L.tileLayer.wms('http://15.207.105.77:8080/geoserver/ne/wms?service=WMS&', {
+            layers: 'circle',
+            format: 'image/png',
+            transparent: true
+
+        });
+       var ForestPluscheckBlocks = new L.tileLayer.wms('http://15.207.105.77:8080/geoserver/ne/wms?service=WMS&', {
+            layers: 'blocks',
+            format: 'image/png',
+            transparent: true
+
+        });
+
+
+        var map = L.map('map', {
+            zoomControl: false,
+            center: [10.850516, 76.271080],
+            zoom: 10,
+            layers: [googleStreets, ForestPlusDivision]
+        });
+        function fnRecheckLayer() {
+            if ($("#checkDivision").is(":checked")) {
+                map.removeLayer(ForestPlusDivision);
+                ForestPlusDivision.addTo(map);
+            }
+            if ($("#checkRange").is(":checked")) {
+                map.removeLayer(ForestPlusRange);
+                ForestPlusRange.addTo(map);
+            }
+            if ($("#checkBlock").is(":checked")) {
+                map.removeLayer(ForestPlusBlocks);
+                ForestPlusBlocks.addTo(map);
+            }
+            if ($("#checkBlocks").is(":checked")) {
+                map.removeLayer(ForestPluscheckBlocks);
+                ForestPluscheckBlocks.addTo(map);
+            }
+
+        }
+
+
+     function fnText(str) {
+
+            if (str == "GoogleStreet" || str == "GoogleHybrid" || str == "GoogleTerrain" || str == "OpenStreetMap" || str == "OpenTopoMap" || str == "OpenMapSurfer" || str == "EsriWorldStreet") {
+                map.removeLayer(googleStreets);
+                map.removeLayer(googleHybrid);
+                map.removeLayer(googleTerrain);
+                map.removeLayer(OpenStreet);
+                map.removeLayer(OpenTopoMap);
+                map.removeLayer(Esri_WorldStreetMap);
+            }
+
+            if (str == "GoogleStreet") {
+                if ($("#rbGoogleStreet").is(":checked")) {
+                    googleStreets.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(googleStreets);
+                }
+            }
+
+            if (str == "GoogleTerrain") {
+                if ($("#rbGoogleTerrain").is(":checked")) {
+                    googleTerrain.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(googleTerrain);
+                }
+            }
+
+            if (str == "GoogleHybrid") {
+                if ($("#rbGoogleHybrid").is(":checked")) {
+                    googleHybrid.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(googleHybrid);
+                }
+            }
+
+            if (str == "OpenStreetMap") {
+                if ($("#rbOpenStreet").is(":checked")) {
+                    OpenStreet.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(OpenStreet);
+                }
+            }
+
+
+            else if (str == "OpenTopoMap") {
+
+                if ($("#rbOpenTopo").is(":checked")) {
+                    OpenTopoMap.addTo(map);
+                    fnRecheckLayer();
+
+                }
+                else {
+                    map.removeLayer(OpenTopoMap);
+                }
+            }
+
+
+
+            else if (str == "EsriWorldStreet") {
+
+                if ($("#rbEsriWorldStreet").is(":checked")) {
+                    Esri_WorldStreetMap.addTo(map);
+                    fnRecheckLayer();
+                }
+                else {
+                    map.removeLayer(Esri_WorldStreetMap);
+                }
+            }
+
+
+            if (str == "ResidentialDetails") {
+                if ($("#checkResidential").is(":checked")) {
+                    ResidentialDetails.addTo(map);
+                }
+                else {
+                    map.removeLayer(ResidentialDetails)
+                }
+            }
+
+
+
+
+            if (str == "ForestPlusDivision") {
+                if ($("#checkDivision").is(":checked")) {
+                    ForestPlusDivision.addTo(map);
+                }
+                else {
+                    map.removeLayer(ForestPlusDivision)
+                }
+            }
+            if (str == "ForestPlusRange") {
+                if ($("#checkRange").is(":checked")) {
+                    ForestPlusRange.addTo(map);
+                }
+                else {
+                    map.removeLayer(ForestPlusRange)
+                }
+            }
+            if (str == "ForestPluscheckBlocks") {
+                if ($("#checkBlocks").is(":checked")) {
+                    ForestPluscheckBlocks.addTo(map);
+                }
+                else {
+                    map.removeLayer(ForestPluscheckBlocks)
+                }
+            }
+            if (str == "ForestPlusBlocks") {
+                if ($("#checkBlock").is(":checked")) {
+                    ForestPlusBlocks.addTo(map);
+                }
+                else {
+                    map.removeLayer(ForestPlusBlocks)
+                }
+            }
+
+
+        }
+
+        //Zoom Home
+        var zoomHome = L.Control.zoomHome();
+        zoomHome.addTo(map);
+
+
+    /*==============================================
+                TILE LAYER and WMS
+    ================================================*/
+    //osm layer
+
+
+    // dark map
+    var dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    });
+
+
+
+
+
+
+
+    /*==============================================
+                        MARKER
+    ================================================*/
+
+
+
+
+
+    /*==============================================
+                GEOJSON
+    ================================================*/
+
+
+
+
+    /*==============================================
+                    LAYER CONTROL
+    ================================================*/
+    var baseMaps = {
+        "OSM": osm,
+        "Water color map": watercolor,
+        'Dark': dark,
+        'Google Street': googleStreets,
+        "Google Satellite": googleSat,
+    };
+    var overlayMaps = {
+        "First Marker": singleMarker,
+        'Second Marker': secondMarker,
+        'Point Data': pointData,
+        'Line Data': lineData,
+        'Polygon Data': polygonData,
+        'wms': wms
+    };
+    // map.removeLayer(singleMarker)
+
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+
+    /*==============================================
+                    LEAFLET EVENTS
+    ================================================*/
+    map.on('mouseover', function () {
+        console.log('your mouse is over the map')
+    })
+
+    map.on('mousemove', function (e) {
+        document.getElementsByClassName('coordinate')[0].innerHTML = 'lat: ' + e.latlng.lat + 'lng: ' + e.latlng.lng;
+        console.log('lat: ' + e.latlng.lat, 'lng: ' + e.latlng.lng)
+    })
+
+
+    /*==============================================
+                    STYLE CUSTOMIZATION
+    ================================================*/
+
+
+
+
+</script>
+<script>
+    var arrobj = new Array();
+    const image1_lat = new Array();
+    const image1_log = new Array();
+    const image2_lat = new Array();
+    const image2_log = new Array();
+    const image3_lat = new Array();
+    const image3_log = new Array();
+    const image4_lat = new Array();
+    const image4_log = new Array();
+    var data = JSON.parse("{{values|escapejs}}");
+    image1_lat.push(data[0].image1_lat);
+    image2_lat.push(data[0].image2_lat);
+    image3_lat.push(data[0].image3_lat);
+    image4_lat.push(data[0].image4_lat);
+    image1_log.push(data[0].image1_log);
+    image2_log.push(data[0].image2_log);
+    image3_log.push(data[0].image3_log);
+    image4_log.push(data[0].image4_log);
+    url = '{% static 'images/location9.png' %}';
+    size = [30, 30];
+    var greenIcon = L.icon({
+        iconUrl: url,
+        iconSize: size,
+    });
+    const markers = new L.Marker({ lat: image1_lat[0], lon: image1_log[0] }, { icon: greenIcon });
+          map.addLayer(markers);
+    const markers1 = new L.Marker({ lat: image2_lat[0], lon: image2_log[0] }, { icon: greenIcon });
+          map.addLayer(markers1);
+    const markers2 = new L.Marker({ lat: image3_lat[0], lon: image3_log[0] }, { icon: greenIcon });
+          map.addLayer(markers2);
+    const markers3 = new L.Marker({ lat: image4_lat[0], lon: image4_log[0] }, { icon: greenIcon });
+          map.addLayer(markers3);
+
+    var data1 = JSON.parse("{{scan_details_values|escapejs}}");
+    url1 = '{% static 'images/location3.jpg' %}';
+    size1 = [30, 30];
+    var greenIcon1 = L.icon({
+        iconUrl: url1,
+        iconSize: size1,
+    });
+
+        for (i = 0; i <= data1.length; i++) {
+            console.log("dd",data1.d);
+            var check_lat = new Array();
+            var check_log = new Array();
+            check_lat.push(data1[i].check_lat);
+            check_log.push(data1[i].check_log);
+            //console.log(data1.length)
+            console.log(check_lat.length)
+            for (j = 0; j < check_lat.length; j++)
+                {
+                const markers5 = new L.Marker({ lat: check_lat[j], lon: check_log[j] }, { icon: greenIcon1 });
+                      map.addLayer(markers5);
+                      if(i==0){
+                        var pointA = new L.LatLng(image4_lat[0], image4_log[0]);
+                      } else {
+                      pointA=pointB;
+                      }
+                var pointB = new L.LatLng(check_lat[j], check_log[j]);
+                    console.log(pointB)
+                var pointList = [pointA, pointB];
+                var firstpolyline = new L.Polyline(pointList, {
+                            color: 'red',
+                            weight: 3,
+                            opacity: 0.5,
+                            smoothFactor: 1
+                });
+                firstpolyline.addTo(map);
+
+
+            }
+        }
+
+
+
+<!--    var pointA = new L.LatLng(image1_lat[0], image1_log[0]);-->
+<!--    var pointB = new L.LatLng(image2_lat[0], image2_log[0]);-->
+<!--    var pointC = new L.LatLng(image3_lat[0], image3_log[0]);-->
+<!--    var pointD = new L.LatLng(image4_lat[0], image4_log[0]);-->
+<!--    var pointList = [pointA, pointB, pointC, pointD, pointA];-->
+
+<!--    var firstpolyline = new L.Polyline(pointList, {-->
+<!--        color: 'red',-->
+<!--        weight: 3,-->
+<!--        opacity: 0.5,-->
+<!--        smoothFactor: 1-->
+<!--    });-->
+<!--    firstpolyline.addTo(map);-->
+</script>
+{% endblock %}

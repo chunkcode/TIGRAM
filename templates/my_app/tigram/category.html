@@ -1,0 +1,416 @@
+{% extends 'my_app/tigram/top_bant.html' %}
+{% load static %}
+{% block content %}
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+
+
+*{ margin:0px; padding:0px; text-decoration:none; list-style:none; font-weight:normal; box-sizing:border-box;}
+
+body{
+ /*font-family: 'Cairo', sans-serif;*/
+background:#fff;
+}
+.clearfix{
+clear:both;
+}
+/*.top_band{
+height:50px;
+display:flex;
+align-items:center;
+padding:0px 20px;
+justify-content:space-between;
+}
+.top_band .links a{
+margin:0px 10px;
+text-decoration:underline;
+}
+.top_band button{
+cursor:pointer;
+}*/
+.cont{
+width:100%;
+/*background-image:url("{% static 'images/bg_03.jpg' %}");*/
+/*background-image:url("{% static 'images/q3.jpg' %}");*/
+background-repeat:no-repeat;
+background-position:center center;
+/*width:100%;*/
+background-size:cover;
+/*height:100vh;*/
+background-attachment:fixed;
+padding-top:calc(50vh - 280px);
+padding-bottom:20px;
+}
+
+.pro_form{
+width:600px;
+background:rgba(255,255,255,0.9);
+margin:auto;
+}
+.pro_form .title{
+padding:10px 20px;
+font-size:16px;
+border:1px solid #ccc;
+text-transform:uppercase;
+font-weight:bold;
+margin-bottom:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#fff;
+text-align:center;
+}
+.pro_form .title span{
+font-weight:bold;
+}
+.edit_btn{
+background:#efefef;
+padding:5px 10px;
+cursor:pointer;
+box-shadow:1px 1px 5px #ccc;
+}
+.edit_btn:hover{
+background:#000;
+color:#fff;
+}
+.user_img{
+width:150px;
+height:150px;
+border-radius:50%;
+overflow:hidden;
+margin:auto;
+margin-bottom:20px;
+position:relative;
+}
+.edit_img{
+position:absolute;
+top:calc(75px - 20px);
+left:calc(75px - 20px);
+background:none;
+border:none;
+cursor:pointer;
+outline:none;
+opacity:0.5;
+}
+.edit_img:hover{
+opacity:1;
+}
+.user_img img{
+width:100%;
+}
+.user_details{
+padding:0px 20px;
+}
+
+.user_details .lbl{
+width:100px;
+float:left;
+font-weight:700;
+font-size:14px;
+margin-top:8px;
+}
+.user_details .input_box{
+width:100%;
+margin-bottom:20px;
+}
+.user_details .input_box input,.user_details .input_box textarea{
+width:100%;
+padding:7px;
+font-family: 'Cairo', sans-serif;
+font-size:16px;
+line-height:22px;
+outline:none;
+border:1px solid #ccc;
+background:#fff;
+}
+.user_details .input_box textarea{
+height:105px;
+resize:none;
+padding:7px;
+margin-bottom:10px;
+font-size:16px;
+line-height:22px;
+}
+.file_upload{
+margin-bottom:20px;
+}
+.file_upload label{
+width:200px;
+display:inline-block;
+
+}
+.file_upload input[type="file"]::-webkit-file-upload-button {
+  background: #fff;
+  color:#222;
+  padding:5px 15px;
+  margin:0px 10px;
+  border:1px solid #aaa;
+  cursor:pointer;
+}
+.file_upload input[type="file"]::-webkit-file-upload-button:hover {
+  background: #000;
+  color:#fff;
+}
+
+.top_band button{
+background:none;
+border:none;
+font-size:16px;
+}
+.cancel_update{
+text-align:center;
+margin-bottom:10px;
+}
+.cancel_update button{
+background:none;
+border:none;
+padding:7px 15px;
+color:#fff;
+text-transform:uppercase;
+margin:0px 10px;
+cursor:pointer;
+cursor:pointer;
+box-shadow:1px 1px 5px #ccc;
+font-weight:700;
+font-size:14px;
+}
+.cancel_btn{
+background:#000 !important;
+
+}
+.update_btn{
+background: #6174ff !important;
+}
+
+.login_btn{
+width:200px;
+}
+
+select {
+    width: 100%;
+    padding: 12px 12px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+	font-family: 'Roboto', sans-serif;
+	font-size:16px;
+  }
+
+
+.view_mode input,.view_mode textarea{
+}
+.view_mode .cancel_update{
+display:none;
+
+}
+.view_mode .edit_img{
+display:none;
+}
+
+.forgot_regis{
+display:flex;
+justify-content:space-between;
+padding:20px;
+}
+.forgot_regis a{
+text-decoration:underline;
+
+}
+.forgot_pass{
+color:red;
+}
+.regis{
+color:#222;
+}
+.remember_me_check{
+padding:0px 20px;
+}
+
+body{
+background-image:url('{% static "images/bg_08.jpg" %}');
+background-repeat:no-repeat;
+background-position:center center;
+background-attachment:fixed;
+min-height:100vh;
+background-size:cover;
+}
+
+.firstChildren {
+  flex: 1 1 50%;
+  display: flex;
+  max-width: 640px; /* max-width = 300px + 4 x 10px margin */
+}
+
+.secondChildren {
+  flex: 1;
+  border: 1px solid black;
+  min-width: 50px; /* minimum width */
+  margin: 10px;
+}
+
+.secondChildren:after { /* create squares */
+  content: '';
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 100%;
+}
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  /*background-color: #333;*/
+  background-color: #fff;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  /*bottom: 30px;*/
+  top: 140px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+
+@media only screen and (max-width:1024px){
+	.cont{
+		padding-top: 0px !important;
+		padding-bottom:0px !important;
+		overflow-y: auto !important;
+		height:auto !important;
+		padding: 20px !important;
+	}
+	.pro_form {
+    width: 100% !important;
+	}
+}
+</style>
+
+
+
+<script>
+</script>
+
+</head>
+
+<body>
+{% if messages %}
+        <!-- <ul > -->
+        {% for message in messages %}
+        {% if message.tags == "success" %}
+    <div id="snackbar" style="background-color:green;"><b><i class="fa fa-check" style="font-size:23px;color:white"></i>{{message}}</b></div>
+    {% elif message.tags == "error"%}
+    <div id="snackbar" style="background-color:red;"><b><i class="fa fa-times-circle" style="font-size:23px;color:white"></i>{{message}}</b></div>
+    {% elif message.tags == "warning"%}
+    <div id="snackbar" style="background-color:#ffc107;"><b><i class="fa fa-exclamation-triangle" style="font-size:23px;color:white"></i>{{message}}</b></div>
+    {% else %}
+    <div id="snackbar" style="background-color:grey;"><b><i class="fa fa-home" style="font-size:23px"></i>Something Wrong!</b></div>
+    {% endif %}
+
+    {% endfor %}
+
+    {% endif %}
+
+<div class="cont">
+	<div class="pro_form ">
+	<!-- 	<h3><label style="color: red;text-align: center;">{{message}}</label></h3> -->
+	<div class="title warn"><span>{{message}}</span> </div>
+<form class="modal-content" method='POST' action="{% url 'firmregistration' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+	<div class="title"><span>Buyer form (<i><small>To be filled for the first time</small></i> )</span> </div>
+		<div class="user_details">
+			<div class="tree_check input_box">
+				<select id="state" name="user_category"  required>
+					<option value="">Select User Type</option>
+					<option value="ind">Individual</option>
+					<option value="fir">Firm</option>
+				</select>
+			</div>
+			<div class="firm-fir" id="fform">
+			<div class="input_box"><input type="text" class="field" id="f1" value="" placeholder="Organization Name" name="organization"  /></div>
+			<div class="input_box"><input type="text" class="field" id="f2" value="" placeholder="PAN Number" name="pan_card"  /></div>
+			<div class="input_box"><input type="text" id="f3" value="" placeholder="GST Number (if any)" name="gst"  /></div>
+			<div class="input_box"><input type="text" class="field" id="f4" value="" placeholder="CIN Number" name="cin_number"  /></div>
+			<div class="input_box"><input type="text" class="field" id="f5" value="" placeholder="TAN Number" name="tan_number"  /></div>
+			<div class="input_box"><input type="text" class="field" id="f6" value="" placeholder="Service TAX number" name="service_tax"  /></div>
+			<div class="input_box"><input type="text" value="" placeholder="Website (if any)" name="website"/></div>
+			</div>
+		<div class="cancel_update">
+			<button class="cancel_btn " >Cancel</button>
+			<button class="update_btn " id="update_btn" type="submit">Submit</button>
+		</div>
+		</div>
+</form>
+		<div class="clearfix"></div>
+	</div>
+</div>
+<script>
+
+
+
+$(document).ready(function(){
+	var msg = '{{message}}';
+
+	if (msg.length<1){
+		$('.warn').hide();
+	}
+	if('{{response_code}}' == 'error'){
+		$('.warn').css('color', 'red');
+	}
+	else{
+		$('.warn').css('color', 'green');
+	}
+
+$(".firm-fir").hide(); //hide all forms
+$("#state").change(function() {
+  let state = this.value; //get state
+  if (state === "ind"){
+  $(".firm-fir").hide();
+  } else if (state === "fir") {
+  $(".firm-" + state).show(); //show only related form
+  const inputs = document.querySelectorAll('.field');
+	for (const input of inputs) {
+  	input.setAttribute('required', '');
+	}
+  } else {
+  document.getElementById("update_btn").disabled = true;
+  }
+});
+
+  $(".cancel_btn").click(function(e){
+  	e.preventDefault();
+  	window.location.href='{% url "dashboard" %}';
+  });
+});
+</script>
+<script>
+                       function myFunction() {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+// if(messages){
+myFunction();
+</script>
+</body>
+
+</html>
+{% endblock %}

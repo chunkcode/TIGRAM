@@ -1,0 +1,170 @@
+{% extends 'my_app/tigram/admin/menu-left.html' %}
+{% load static %}
+{% block content %}
+<html>
+<!-- <head><script src="https://code.jquery.com/jquery-3.5.1.js"></script></head> -->
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+	<style type="text/css">
+		.user_details .input_box{
+width:100%;
+margin-bottom:20px;
+}
+.user_details .input_box input,.user_details .input_box textarea{
+width:100%;
+padding:7px;
+font-family: 'Cairo', sans-serif;
+font-size:16px;
+line-height:22px;
+outline:none;
+border:1px solid #ccc;
+background:#fff;
+}
+.user_details .input_box textarea{
+height:105px;
+resize:none;
+padding:7px;
+margin-bottom:10px;
+font-size:16px;
+line-height:22px;
+}
+
+.file_upload{
+margin-bottom:20px;
+}
+.file_upload label{
+width:200px;
+display:inline-block;
+
+}
+.file_upload input[type="file"]::-webkit-file-upload-button {
+  background: #fff;
+  color:#222;
+  padding:5px 15px;
+  margin:0px 10px;
+  border:1px solid #aaa;
+  cursor:pointer;
+}
+.file_upload input[type="file"]::-webkit-file-upload-button:hover {
+  background: #000;
+  color:#fff;
+}
+select {
+    width: 100%;
+    padding: 12px 12px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+.red-color {
+color:red;
+}
+	</style>
+</head>
+
+<body>
+
+    
+	      <div class="modal-body">
+	        <!-- <p>Some text in the modal.</p> -->
+	        <form  action="{% url 'admin_update_checkpost_officers' user_details.id%}"  method='POST' enctype="multipart/form-data">
+	        {% csrf_token %}
+			<!-- <div class="title"><span>Registration</span> </div> -->
+			<div class="user_details">
+
+        
+         
+            <br>
+			
+			<label name="checkpost" class="required"><h2>CheckPosts:</h2></label> <h4>previous checkpost  : {{checkpost.name}}</h4>
+	<select name="checkpost"id="ran_val" class="nothing" style="width:50%" required>
+							<option value="">Select CheckPost</option>
+							   {% for each in checks %}
+								<option value="{{each.id}}" class="italize_species"> {{each.name}}</option>
+							   {% endfor %}
+								<!-- <option value="Kulathupuzha" class="italize_species"> Kulathupuzha</option>
+								<option value="Palode" class="italize_species"> Palode</option> -->
+
+						</select>
+		<br>
+
+
+        <div class="input_box"><input type="text" value="{{user_details.name}}" placeholder="Name" name="uname" required style="width:50%"/></div>
+				<div class="input_box"><input type="text" value="{{user_details.email}}" placeholder="Email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+					onchange = "email_check(this)"required style="width:50%"/></div>
+				<div class="input_box"><input type="text" value="{{user_details.phone}}" placeholder="Contact Number" id ="number" style="width:50%" name="number" pattern="(?=.*[0-9]).{10}" title="Phone Number Must contain 10 digits" maxlength="10" onchange="mobile_check(this)"; /></div>
+				<div class="input_box"><input type="text" value="{{user_details.address}}" placeholder="Address" name="address" required style="width:50%" /></div>
+                <!-- <div class="input_box"><input type="text" value="" placeholder="Division" name="division" required /></div> -->
+								{% comment %} <div class="tree_check input_box">
+									<select name="photo_proof_select" id="photo_proof_select" required style="width:50%">
+										<option value="">Select Photo Identity Proof</option>
+										<option value="aadhar card">Aadhar Card</option>
+										<option value="passport">Passport</option>
+										<option value="driving license">Driving License</option>
+										<option value="government id">Government ID</option>
+									
+									</select>
+								</div>
+								<div class="input_box"><input type="text" value="" name="photo_proof_no" placeholder="ID proof Number"  required style="width:50%" /></div>
+								
+								<label for="propt" class="custom-file-upload" id="upload-file-msg"><b>Upload Photo ID Proof:</b></label> {% endcomment %}
+
+							<div class="input_box"><input type="text" value="{{officer.post}}" placeholder="Post" name="post_name" required style="width:50%"/></div>
+	        	<div class="input_box"><input type="text" value="{{officer.office_address}}" placeholder="Office Address" name="off_address" style="width:50%" /></div>
+				<!-- <div class="input_box"> -->
+					<br><div class="input_box">
+						<input type="password" value="" placeholder="Password" style="width:50%" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="psw" name="psw" data-type="pswd"
+									title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
+									onchange = "pass_check(this)" ><i class="fa fa-eye-slash fa-eye" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i></input>
+							</div>
+					<div class="input_box">
+						<input type="password" value="" style="width:50%" placeholder="Repeat Password " pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="psw2" name="psw2" data-type="pswd"
+						onchange = "pass_check(this)"  ><i class="fa fa-eye-slash fa-eye" id="togglePassword2" style="margin-left: -30px; cursor: pointer;"></i></input>
+					</div>
+          
+            <a class="btn btn-default" href="{% url "admin_dashboard" %}">Close</a>
+            <input type="submit" class="btn btn-success" value="Update">
+          </div>
+					<div id="message">
+	<!--             <div><b>Password must contain the following:</b></div>
+	            <div id="letter" class="invalid">A <b>lowercase</b> letter</div>
+	            <div id="capital" class="invalid">A <b>capital (uppercase)</b> letter</div>
+	            <div id="number" class="invalid">A <b>number</b></div>
+	            <div id="length" class="invalid">Minimum <b>8 characters</b></div> -->
+	        </div>
+			</div>
+      </div>
+			
+		</form>
+    </div>
+
+  </div>
+</div>
+</body>
+<script>
+
+  $('#togglePassword').on('click',function(){
+    const password = document.querySelector('#psw');
+    var type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+  password.setAttribute('type', type);
+  // toggle the eye slash icon
+  this.classList.toggle('fa-eye-slash');
+  })
+
+  $('#togglePassword2').on('click',function(){
+    const password = document.querySelector('#psw2');
+    var type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+  password.setAttribute('type', type);
+  // toggle the eye slash icon
+  this.classList.toggle('fa-eye-slash');
+  })
+
+
+    	
+</script>
+</html>
+	{% endblock %}

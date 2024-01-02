@@ -1,0 +1,336 @@
+{% extends 'my_app/tigram/top_band_cont.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'css/dash.css' %}">
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  {% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> {% endcomment %}
+  <script src="{% static 'js/ajax.js' %}"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+		
+		<script src="https://use.fontawesome.com/7abfe604da.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+		<link rel="stylesheet" href="https://use.fontawesome.com/15e405067d.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/15e405067d.css">
+
+    
+<style type="text/css">
+    /*.cont{
+        height:calc(100% - 150px);
+    }
+    body{
+        height: 100%;
+    }*/
+    
+    @media only screen and (min-width:768px) and (max-width:1024px){
+.cont{
+	    padding-top: 20px !important;
+		min-height: auto;
+}
+.dash_links {
+    padding-top: 0px !important;
+}
+.dash_links .wrap{
+	        display: flex !important;
+    flex-wrap: wrap;
+    padding-left: 20px;
+	width:100%;
+}
+.dash_links button {
+    width:calc(33.33% - 20px);
+	margin-right:20px;
+}	
+.dash_links button a {
+    color: #fff;
+    font-size: 18px;
+    line-height: 25px;
+}
+.dash_links button:hover {
+    width:calc(33.33% - 20px) !important;
+}
+}
+@media only screen and (max-width:767px){
+.cont{
+	    padding-top: 20px !important;
+		min-height: auto;
+		height: auto !important;
+		padding-bottom: 20px !important;
+}
+.dash_links {
+    padding-top: 0px !important;
+}
+.dash_links .wrap{
+	        display: flex !important;
+    flex-wrap: wrap;
+    padding-left: 20px;
+	width:100%;
+}
+.dash_links button {
+    width:calc(100% - 20px);
+	margin-right:20px;
+}	
+.dash_links button a {
+    color: #fff;
+    font-size: 18px;
+    line-height: 25px;
+}
+.dash_links button:hover {
+    width:calc(100% - 20px) !important;
+}
+}
+        .modal:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        .modal-dialog {
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 45rem;
+        }
+
+        .modal .modal-content {
+            padding: 20px 20px 20px 20px;
+            -webkit-animation-name: modal-animation;
+            -webkit-animation-duration: 0.5s;
+            animation-name: modal-animation;
+            animation-duration: 0.5s;
+        }
+
+.order-card {
+    color: #fff;
+}
+
+.bg-c-blue {
+    background: linear-gradient(45deg,#4099ff,#73b4ff);
+}
+
+.bg-c-green {
+    background: linear-gradient(45deg,#2ed8b6,#59e0c5);
+}
+
+.bg-c-yellow {
+    background: linear-gradient(45deg,#FFB64D,#ffcb80);
+}
+
+.bg-c-pink {
+    background: linear-gradient(45deg,#FF5370,#ff869a);
+}
+
+
+.card {
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    border: none;
+    margin-bottom: 30px;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.card .card-block {
+    padding: 25px;
+}
+
+.order-card i {
+    font-size: 26px;
+}
+
+.f-left {
+    float: left;
+}
+
+.f-right {
+    float: right;
+}
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: auto;
+    content: "";
+    background-color: rgba(0,0,0,0);
+}
+</style>
+
+    </head>
+    <body > 
+        {% comment %} style="overflow-y:hidden;" {% endcomment %}
+
+
+        {% if messages %}
+
+        <ul class="messages">
+            {% for message in messages %}
+            <script>
+             swal("{{message}}")
+            </script>
+    
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- <nav class="nav">
+            <div class="right">
+                <a href="{% url 'user_logout' %}" class="h6-button" id="icon"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a>
+                <a href="{% url 'view_profile' request.user.id %}" class="h7-button"><i class="fa fa-user-circle fa-2x"></i></a>
+            </div>
+        </nav> -->
+        <div class="cont nice_scroll" >
+{% if transit_succ == 'true' %}
+            transit_succ = 'false'
+    <div id="dashboard" class = "modalpop">
+    </div>
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-blue order-card">
+                <div class="card-block">
+                    <h2 class="text-right"><i class="fa fa-file-text f-left"></i></h2><br>
+                    <h4 class="m-b-0"><strong>APPLY FOR CUTTING / TRANSIT PASS </strong></h4>
+                    <a href="{% url 'select_village' %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+<!--        <div class="col-md-4 col-xl-3">-->
+<!--            <div class="card bg-c-green order-card">-->
+<!--                <div class="card-block">-->
+<!--                    <h2 class="text-right"><i class="fa fa-id-card-o f-left"></i></h2><br>-->
+<!--                    <h4 class="m-b-0"><strong>APPLY TRANSIT PASS FOR NOTIFIED VILLAGES</strong></h4>-->
+<!--                    <a href="{% url 'notified_application_form' %}" class="stretched-link"></a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-yellow order-card">
+                <div class="card-block">
+                    <h2 class="text-right"><i class="fa fa-check-circle f-left"></i></h2><br>
+                    <h4 class="m-b-0"><strong>APPLY FOR NOC <br><br></strong></h4>
+                    <a href="{% url 'noc_application_form' %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-pink order-card">
+                <div class="card-block">
+                    <h2 class="text-right"><i class="fa fa-circle-o-notch f-left"></i></h2><br>
+                    <h4 class="m-b-0"><strong>CHECK PASS STATUS <br><br></strong></h4>
+                    <a href="{% url 'check_status' %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+                <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-blue order-card">
+                <div class="card-block">
+                    <h2 class="text-right"><i class="fa fa-shopping-cart f-left"></i></h2><br>
+                    <h4 class="m-b-0"><strong>TIGRAM WOOD SHED<br><br></strong></h4>
+                    <a href="" data-toggle="modal" data-target="#myModal" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+                <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-green order-card">
+                <div class="card-block">
+                    <h2 class="text-right"><i class="fa fa-list-alt f-left"></i></h2><br>
+                    <h4 class="m-b-0"><strong>ACKNOWLEDGEMENT<br><br></strong></h4>
+                    <a href="{% url 'UserScaned' %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+                <div class="col-md-4 col-xl-3">
+            <div class="card bg-c-yellow order-card">
+                <div class="card-block">
+                    <h2 class="text-right"><i class="fa fa-info-circle f-left"></i></h2><br>
+                    <h4 class="m-b-0"><strong>HELP<br><br></strong></h4>
+                    <a href="{% url 'query' %}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+            
+		<div class="dash_links hide">
+			<div class="wrap">
+			 <button  class="bg_01" style="height:400px" ><a href="{% url 'application_form' %}"><img src="{% static 'images/apply_icon.png' %}" /><br/> <b>  APPLY TRANSIT PASS FOR NON-NOTIFIED VILLAGES</b></a></button><br>
+             <button  class="bg_02" style="height:400px" ><a href="{% url 'notified_application_form' %}"><img src="{% static 'images/apply_icon.png' %}" /><br/> <b>  APPLY TRANSIT PASS FOR NOTIFIED VILLAGES</b></a></button><br>
+             <button  class="bg_03" style="height:400px" ><a href="{% url 'noc_application_form' %}"><img src="{% static 'images/apply_icon.png' %}" /><br/> <b>  APPLY FOR NOC</b></a></button><br>
+            <button class="bg_04" style="height:400px" ><a href="{% url 'check_status' %}"><img src="{% static 'images/check_status.png' %}" /> <br/> <b>CHECK PASS STATUS</b></a></button><br>
+                <button class="bg_05" style="height:400px" data-toggle="modal" data-target="#myModal" ><img src="{% static 'images/check_status.png' %}" /> <br/> <b>TIGRAM WOOD SHED</b></a></button><br>
+                <button class="bg_01" style="height:400px"  ><a href="{% url 'UserScaned' %}"><img src="{% static 'images/apply_icon.png' %}" /> <br/> <b>ACKNOWLEDGEMENT</b></a></button><br>
+            <button class="bg_02" style="height:400px"><a href="{% url 'query' %}"><img src="{% static 'images/question_icon.png' %}" /> <br/><b>HELP</b></a></button><br>
+			</div>
+		</div>
+		
+        <div class="c1 dash_links hide">
+            <button id="L1"  ><a href="{% url 'application_form' %}"><b>APPLY FOR TRANSIT PASS</b></a></button><br>
+            <button id="L2"><a href="{% url 'check_status' %}"><b>CHECK PASS STATUS</b></a></button><br>
+            <button id="L3"><a href="{% url 'query' %}"><b>QUERY</b></a></button><br>
+        </div>
+        
+        <div class="c2 hide">
+                <img class="mySlides" src="{% static 'images/image2.jpg' %}">
+                <img class="mySlides" src="{% static 'images/i4.jpg' %}">
+                <img class="mySlides" src="{% static 'images/i6.jpg' %}">
+        </div>
+        </div>
+          <div class="modal fade justify" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <h4 class="modal-title">Select User Type</h4>
+        </div>
+        <div class="text-center"  >
+            <a href="{% url 'Buyer_Data' %}"><button class="btn btn-lg btn-warning" style="width:150px;">Buyer</button></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="{% url 'Buyer_Seller_Data' %}"><button class="btn btn-lg btn-success" style="width:150px;">Seller</button></a>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+        <script>
+            var myIndex = 0;
+            carousel();
+            function carousel() {
+                var i;
+                var x = document.getElementsByClassName("mySlides");
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                myIndex++;
+                if (myIndex > x.length) { myIndex = 1 }
+                x[myIndex - 1].style.display = "block";
+                setTimeout(carousel, 3000);
+            }
+            $('document').ready(function() {
+                if ($('#dashboard').hasClass('modalpop')){
+                //alert('Form Submitted Successfully');
+                swal('TIGRAM','Form Submitted Successfully.');
+
+                }
+            });
+        </script>
+    </body>
+</html>
+{% endblock %}

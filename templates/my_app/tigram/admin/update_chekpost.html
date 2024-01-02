@@ -1,0 +1,137 @@
+{% extends 'my_app/tigram/admin/menu-left.html' %}
+{% load static %}
+{% block content %}
+<html>
+<!-- <head><script src="https://code.jquery.com/jquery-3.5.1.js"></script></head> -->
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+	<style type="text/css">
+		.user_details .input_box{
+width:100%;
+margin-bottom:20px;
+}
+.user_details .input_box input,.user_details .input_box textarea{
+width:100%;
+padding:7px;
+font-family: 'Cairo', sans-serif;
+font-size:16px;
+line-height:22px;
+outline:none;
+border:1px solid #ccc;
+background:#fff;
+}
+.user_details .input_box textarea{
+height:105px;
+resize:none;
+padding:7px;
+margin-bottom:10px;
+font-size:16px;
+line-height:22px;
+}
+
+.file_upload{
+margin-bottom:20px;
+}
+.file_upload label{
+width:200px;
+display:inline-block;
+
+}
+.file_upload input[type="file"]::-webkit-file-upload-button {
+  background: #fff;
+  color:#222;
+  padding:5px 15px;
+  margin:0px 10px;
+  border:1px solid #aaa;
+  cursor:pointer;
+}
+.file_upload input[type="file"]::-webkit-file-upload-button:hover {
+  background: #000;
+  color:#fff;
+}
+select {
+    width: 100%;
+    padding: 12px 12px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+.red-color {
+color:red;
+}
+	</style>
+</head>
+
+<body>
+
+    
+	      <div class="modal-body">
+	        <!-- <p>Some text in the modal.</p> -->
+	        <form  action="{% url 'update_checkpost' checkpost.id%}"  method='POST' enctype="multipart/form-data">
+	        {% csrf_token %}
+			<!-- <div class="title"><span>Registration</span> </div> -->
+			<div class="user_details">
+
+        <label for="division" class="required"><b>Division:</b></label>
+            <select name="division" id="div_sel" class="nothing" style="width: 200px;" required>
+                                <option value="">Select Division</option>
+                               {% for each in div_list %}
+                                    <option value="{{each}}" class="italize_species"> {{each}}</option>
+                               	{% endfor %}
+                                    <!-- <option  class="italize_species"> Trivandrum</option> -->
+
+                            </select>
+            <br>
+                <label for="area_range" class="required"><b>Range:</b></label>
+        <select name="area_range" id="ran_val" class="nothing" style="width: 200px;" required>
+                                <option value="">Select Range</option>
+                               	{% for each in range_areas %}
+                                    <option value="{{each}}" class="italize_species"> {{each}}</option>
+                               	{% endfor %}
+                                    <!-- <option value="Kulathupuzha" class="italize_species"> Kulathupuzha</option>
+                                    <option value="Palode" class="italize_species"> Palode</option> -->
+
+                            </select>
+            <br>
+			
+			<label name="address" class="required"><b>Circle:</b></label>
+	<select name="address"id="ran_val" class="nothing" style="width: 200px;" required>
+							<option value="">Select Circle</option>
+							   {% for each in circle %}
+								<option value="{{each}}" class="italize_species"> {{each}}</option>
+							   {% endfor %}
+								<!-- <option value="Kulathupuzha" class="italize_species"> Kulathupuzha</option>
+								<option value="Palode" class="italize_species"> Palode</option> -->
+
+						</select>
+		<br>
+				<div class="input_box"><input type="text" value="{{checkpost.name}}" placeholder="Checkpost Name" name="checkpost_name" required /></div>
+
+
+			</div>
+      </div>
+			<div class="modal-footer">
+        
+        <button type="submit" class="btn btn-success"   >Add</button>
+      </div>
+		</form>
+    </div>
+
+  </div>
+</div>
+</body>
+<script>
+
+
+
+			}
+
+
+    	
+</script>
+</html>
+	{% endblock %}

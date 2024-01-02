@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Location</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+</head>
+<body>
+    
+    
+    <div id="map" style="height: 800px;"></div>
+ 
+    <script>
+        var map = L.map('map').setView([{{image1_lat}}, {{image1_log}}], 13);
+        L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 100,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(map);
+
+var location1 = L.marker([{{image1_lat}}, {{image1_log}}]).addTo(map);
+var location2 = L.marker([{{image2_lat}}, {{image2_log}}]).addTo(map);
+ var location3 = L.marker([{{image3_lat}}, {{image3_log}}]).addTo(map);
+ var location4 = L.marker([{{image4_lat}}, {{image4_log}}]).addTo(map);
+
+ location1.bindPopup("<b>Location 1</b><br> lat: {{image1_lat}}, log: {{image1_log}}").openPopup();
+ location2.bindPopup("<b>Location 2</b><br> lat: {{image2_lat}}, log: {{image2_log}}.").openPopup();
+ location3.bindPopup("<b>Location 3</b><br> lat: {{image3_lat}}, log: {{image3_log}}").openPopup();
+ location4.bindPopup("<b>Location 4</b><br> lat: {{image4_lat}}, log: {{image4_log}}").openPopup();
+
+ L.polygon([
+    [{{image1_lat}}, {{image1_log}}],
+    [{{image2_lat}}, {{image2_log}}],
+    [{{image3_lat}}, {{image3_log}}],
+    [{{image4_lat}}, {{image4_log}}]
+]).addTo(map);
+    </script>
+    
+</body>
+</html>

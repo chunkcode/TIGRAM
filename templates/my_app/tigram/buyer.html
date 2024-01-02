@@ -1,0 +1,1353 @@
+{% extends 'my_app/tigram/top_bant.html' %}
+{% load static %}
+{% block content %}
+{% load sweetify %}
+{% sweetify %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/officerdash.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Salsa' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+
+    <!-- Jquery -->
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <script src="{% static 'js/ajax.js' %}"></script>
+    {% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> {% endcomment %}
+    <!-- DataTables -->
+    <link rel="stylesheet" type="text/css" href="{% static 'js/DataTables/datatables.css' %}">
+    <script type="text/javascript" charset="utf8" src="{% static 'js/DataTables/datatables.js' %}"></script>
+
+    <!-- <link rel="stylesheet" type="text/css" href="css/datatables.min.css">
+    <link rel="stylesheet" type="text/css" href="css/datatables.css">
+    <script type="text/javascript" charset="utf8" src="js/datatables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="js/datatables.js"></script> -->
+
+
+<style>
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+
+body{
+/*font-family: 'Roboto', sans-serif;*/
+}
+.cont{
+    background-image: url('{%static "/images/bg_08.jpg" %}');
+    /*max-height: calc(100vh - 250px);*/
+}
+
+.bg_orange{
+background:orange;
+}
+
+.user_details .input_box textarea{
+height:105px;
+resize:none;
+padding:7px;
+margin-bottom:10px;
+font-size:16px;
+line-height:22px;
+}
+.user_details .input_box{
+width:100%;
+margin-bottom:20px;
+}
+.user_details .input_box input,.user_details .input_box textarea{
+width:100%;
+padding:7px;
+font-family: 'Cairo', sans-serif;
+font-size:16px;
+line-height:22px;
+outline:none;
+border:1px solid #ccc;
+background:#fff;
+}
+
+.mpopup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 200px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: none;
+  border: none;
+  border-top: none;
+}
+.tabcontent {
+  animation: fadeEffect 1s; /* Fading effect takes 1 second */
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: auto;
+    padding: 0;
+    width: 450px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    border-radius: 0.3rem;
+}
+.modal-header {
+    padding: 2px 12px;
+    background-color: #ffffff;
+    color: #333;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+}
+.modal-header h2{
+    font-size: 1.25rem;
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+.modal-body {
+    padding: 2px 12px;
+}
+.modal-footer {
+    padding: 1rem;
+    background-color: #ffffff;
+    color: #333;
+    border-top: 1px solid #e9ecef;
+    border-bottom-left-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+    text-align: right;
+}
+
+.close {
+}
+.close:hover, .close:focus {
+
+}
+
+/* add animation effects */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+.div2{
+margin-bottom:30px;
+padding:10px;
+background: #ffffff;
+}
+.div1{
+background: #ffffff;
+width: 750px;
+}
+#myTable01,#myTable02{
+border-top:1px solid #ccc;
+border-left:1px solid #ccc;
+margin-top:10px;
+display:block;
+font-family: 'Roboto', sans-serif;
+}
+#myTable07,#myTable02{
+border-top:1px solid #ccc;
+border-left:1px solid #ccc;
+margin-top:10px;
+display:block;
+font-family: 'Roboto', sans-serif;
+}
+
+#myTable01 tr:nth-child(even),#myTable02 tr:nth-child(even){
+background: #f8f7f7;
+}
+#myTable07 tr:nth-child(even),#myTable02 tr:nth-child(even){
+background: #f8f7f7;
+}
+#myTable thead{
+border-top:1px solid #ccc;
+}
+
+.pending_approve{
+display:flex;
+}
+.pending_approve div{
+
+padding:10px 20px;
+color:#222;
+cursor:pointer;
+font-size:16px;
+border-radius:10px 10px 0px 0px;
+background:#efefef;
+opacity:0.8;
+}
+.dataTables_scroll
+{
+    overflow:auto;
+}
+.pending_approve .pending_btn.active{
+background:orange;
+color:#fff;
+font-weight:bold;
+opacity:1;
+}
+.pending_approve .approve_btn.active{
+background:green;
+color:#fff;
+font-weight:bold;
+opacity:1;
+}
+.pending_approve .deemed_approve_btn.active{
+background:#6012F3;
+color:#fff;
+font-weight:bold;
+opacity:1;
+}
+.pending_approve .noc_btn.active{
+background:#127FF3;
+color:#fff;
+font-weight:bold;
+opacity:1;
+}
+.pending_table thead tr{
+background:orange;
+color:#fff;
+}
+.scan_table thead tr{
+background:orange;
+color:#fff;
+}
+
+/*.approve_table{
+}*/
+.approved_table thead tr{
+background:green;
+color:#fff;
+}
+.deemed_approved_table thead tr{
+background:#6012F3;
+color:#fff;
+}
+.noc_table thead tr{
+background:#127FF3;
+color:#fff;
+}
+.pending_table, .approved_table,.deemed_approved_table,.noc_table{
+position:relative;
+}
+
+.hide{
+display:none !important;
+}
+.dataTables_filter{
+margin-bottom:10px;
+}
+.dataTables_filter input{
+width:250px;
+}
+.dataTables_length select{
+margin:0px 4px;
+}
+.dataTables_wrapper .dataTables_paginate{
+margin-top:7px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+padding: 3px 1em !important;
+}
+.select_filter{
+position:absolute;
+right:400px;
+z-index:1;
+}
+.select_filter select{
+width:170px;
+margin-left:10px;
+padding:5px;
+border:1px solid #ccc;
+border-radius:3px;
+
+}
+/*.table{*/
+/*height:406px;*/
+/*overflow-y:scroll;*/
+/*}*/
+
+table thead tr th:nth-child(1){
+min-width:40px!important;
+}
+table thead tr th:nth-child(2){
+/*min-width:70px!important ;*/
+min-width:170px!important ;
+}
+table thead tr th:nth-child(3){
+min-width:150px;
+}
+table thead tr th:nth-child(4){
+min-width:50px;
+}
+table thead tr th:nth-child(5){
+min-width:250px;
+}
+table thead tr th:nth-child(6){
+min-width:70px;
+}
+table thead tr th:nth-child(7){
+min-width:70px;
+}
+table thead tr th:nth-child(8){
+min-width:120px;
+}
+table thead tr th:nth-child(9){
+min-width:90px;
+}
+table thead tr th:nth-child(10){
+min-width:90px;
+}
+table thead tr th:nth-child(11){
+min-width:70px;
+}
+table thead tr th:nth-child(12){
+min-width:250px;
+text-align:left;
+}
+table thead tr th:nth-child(13){
+text-align:left;
+}
+/*table thead tr th:nth-child(14){
+min-width:70px;
+}*/
+/*table thead tr td{
+
+object-fit:cover;
+}
+*/
+/*table thead tr th:nth-child(1){
+min-width:50px;
+}
+table thead tr th:nth-child(2){
+min-width:50px;
+}
+table thead tr th:nth-child(3){
+min-width:150px;
+}
+table thead tr th:nth-child(4){
+min-width:50px;
+}
+table thead tr th:nth-child(5){
+min-width:250px;
+}
+table thead tr th:nth-child(6){
+min-width:70px;
+}
+table thead tr th:nth-child(7){
+min-width:70px;
+}
+table thead tr th:nth-child(8){
+min-width:120px;
+}
+table thead tr th:nth-child(9){
+min-width:90px;
+}
+table thead tr th:nth-child(10){
+min-width:90px;
+}
+table thead tr th:nth-child(11){
+min-width:70px;
+}
+table thead tr th:nth-child(12){
+min-width:250px;
+text-align:left;
+}
+table tbody tr th:nth-child(13){
+text-align:left;
+}
+table thead tr th:nth-child(14){
+min-width:70px;
+}*/
+.down_btn{
+padding:5px 8px;
+padding-bottom:4px;
+border:none;
+border:1px solid #000;
+color:#000;
+background:#fff;
+cursor:pointer;
+}
+.down_btn:hover{
+border:1px solid blue;
+color:blue;
+}
+.view_app,.qr_code{
+color:#000;
+}
+.view_app:hover,.qr_code:hover{
+color:blue;
+}
+table{
+color:#000 !important;
+}
+.wrap{
+width:80%;
+margin:auto;
+/*height:2000px;*/
+/*background:#fff;*/
+}
+.dataTable{
+   text-align: center;
+}
+div.dataTables_wrapper {
+width:100% !important;
+}
+.qr_img{
+    /*width:200px !important;*/
+    width:240px !important;
+    height:240px !important;
+}
+/*div.log-qr-item {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    width: 120px;
+}*/
+/*img {
+    width: 100px;
+    height: 100px;
+    background-color: grey;
+}*/
+/*.log-qr-item-caption {
+    display: block;
+}*/
+#myModal2{
+    align-self: center;
+    position: absolute;
+    max-height: calc(100vh - 50px);
+}
+.center {
+        width: 70%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+/*.modal-body {
+    overflow-y: auto;
+}*/
+
+@media print{
+    div.log-qr-item {
+    /* To correctly align image, regardless of content height: */
+    vertical-align: top;
+    display: inline-block;
+    /* To horizontally center images and caption */
+    text-align: center;
+    /* The width of the container also implies margin around the images. */
+
+    width: 120px;
+    }
+    .log-qr-item-caption{
+        padding-top: -25px;
+        float: left;
+    }
+
+}
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  /*background-color: #333;*/
+  background-color: #fff;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  /*bottom: 30px;*/
+  top: 140px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/*.filter-range{
+        float:left;
+        overflow: hidden;
+    }
+
+    .filter-range-inner{
+        width: 400px;
+        padding: 10px;
+        border: 1px solid #a29415;
+    }*/
+
+</style>
+</head>
+
+<body>
+<div class="tab" >
+  <button style="background-color:powderblue;" class="tablinks" id="defaultOpen" onclick="openCity(event, 'Self')">Timber Details</button>
+  <button style="background-color:powderblue;" class="tablinks" onclick="openCity(event, 'All')">Buyer Requirements</button>
+</div>
+         {% if messages %}
+        <!-- <ul > -->
+        {% for message in messages %}
+        {% if message.tags == "success" %}
+    <div id="snackbar" style="background-color:green;"><b><i class="fa fa-check" style="font-size:23px;color:white"></i>{{message}}</b></div>
+    {% elif message.tags == "error"%}
+    <div id="snackbar" style="background-color:red;"><b><i class="fa fa-times-circle" style="font-size:23px;color:white"></i>{{message}}</b></div>
+    {% elif message.tags == "warning"%}
+    <div id="snackbar" style="background-color:#ffc107;"><b><i class="fa fa-exclamation-triangle" style="font-size:23px;color:white"></i>{{message}}</b></div>
+    {% else %}
+    <div id="snackbar" style="background-color:grey;"><b><i class="fa fa-home" style="font-size:23px"></i>Something Wrong!</b></div>
+    {% endif %}
+
+    {% endfor %}
+
+    {% endif %}
+
+    <!-- <nav class=nav>
+        <h2>{{text_show}}  Dashboard</h2>
+        <div class="right">
+            <a href="{% url 'user_logout' %}" class="h6-button" id="icon"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a>
+            <a href="{% url 'view_profile' request.user.id %}" class="h7-button"><i class="fa fa-user-circle fa-2x"></i></a>
+        </div>
+    </nav> -->
+
+<div id="Self" class="tabcontent">
+
+    <div class="cont nice_scroll">
+
+        <div class="wrap">
+
+<div style="margin-left:500px;"><a href="javascript:void(0);" class="btn btn-warning" style="width:200px;" id="mpopupLink" ><b>Add Timber</b></a></div>
+
+
+    <div class="div2  pending_table" >
+
+        <!-- <table id="myTable01" class="table nice_scroll2" style=""> -->
+        <table id="myTable01" class="table " style="">
+            <div class="select_filter">
+
+            <select id="sel_application_no1" name=1 class="select-application01">
+                <option value="">Select Species </option>
+                {% for no in species %}
+                <option>{{no.name}}</option>
+                <!-- <option>Applicant No 02</option> -->
+                {% endfor %}
+            </select>
+            <select id="sel_application_name1" name=4 class="select-application01">
+                <option value="">Select District </option>
+                {% for dis in district_name %}
+                 <option>{{dis.district_name}}</option>
+                {% endfor %}
+            </select>
+            <select id="sel_application_date1" name=3 class="select-application01">
+                <option value="">Select Division </option>
+              {% for div in division_areas %}
+                 <option>{{div.name}}</option>
+                {% endfor %}
+            </select>
+
+            </div>
+            <thead>
+
+                <tr style="">
+                    <th>Sr.No</th>
+                    <th>Timber name</th>
+                    <th>Quantity</th>
+                    <th>Division</th>
+                    <th>District</th>
+                    <th>Name</th>
+                    <th>Address</th>
+
+                    <th>Phone number</th>
+
+                    <th>Date</th>
+
+
+
+                    <th>Image</th>
+<!--                    <th>Actions</th>-->
+                </tr>
+
+            </thead>
+    <tbody >
+
+           {% for each in add_data %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                   <td>{{each.timber_name}}</td>
+                    <td>{{each.quantity}}</td>
+                    <td>{{each.division}}</td>
+                     <td>{{each.dist}}</td>
+                    <td>{{each.name}}</td>
+                    <td>{{each.address}}</td>
+                    <td>{{each.phone}}</td>
+                    <td>{{each.date}}</td>
+
+
+
+                    <td>
+
+                        <a href="{{each.timber_image.url}}" class="view_app"><i class="fa fa-eye"></i> View image</a>
+                    </td>
+<!--                    <td>-->
+<!--                        <a href="{% url 'deletedata' each.id %}" class="view_app"><i class="fa fa-delete"></i>Delete</a>-->
+<!--                    </td>-->
+                </tr>
+            {% endfor %}
+
+    </tbody>
+        </table>
+
+    </div>
+
+
+
+
+    <div id="myModal2" class="modal center">
+
+    </div>
+
+            <!-- Link to trigger modal -->
+
+
+<!-- Modal popup box -->
+<div id="mpopupBox" class="mpopup">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add Timber</h2>
+        </div>
+        <div class="modal-body">
+            <form id="form-act" id="fileUploadForm" enctype="multipart/form-data">
+	        {% csrf_token %}
+                <div class="user_details">
+                 <div>
+            <select name="division" id="div_sel" class="nothing textbox1" style="width: 425px;" required>
+                                <option value="">Select Division</option>
+
+                               {% for each in division_areas %}
+                                    <option value="{{each.name}}" class="italize_species"> {{each.name}}</option>
+                                {% endfor %}
+                                    <!-- <option  class="italize_species"> Trivandrum</option> -->
+
+            </select></div>
+                    <br>
+                    <div>
+                        <select name="dist" id ="dist" class="dist" style="width: 425px;" required >
+                <option value="">Select District</option>
+                {% for each in district_name %}
+                    <option value="{{each.district_name}}" > {{each.district_name}}</option>
+                {% endfor %}
+            </select>
+                    </div>
+                    <br>
+                <div class="input_box"><input type="text" value="" placeholder="Name" id="name" name="name" required /></div>
+                <div class="input_box"><input type="text" value="" placeholder="Address" id="address" name="address" required /></div>
+				<div class="input_box"><input type="text" value="" placeholder="Contact Number" id ="number"  name="phone" pattern="(?=.*[0-9]).{10}" title="Phone Number Must contain 10 digits" maxlength="10" onchange="mobile_check(this)"; /></div>
+            <div>
+            <select name="timber_name" id="timber_name" class="nothing" style="width: 425px;" required>
+                                <option value="">Select Timber</option>
+                               {% for each in timber %}
+                                    <option value="{{each.name}}" class="italize_species"> {{each.name}}</option>
+                               	{% endfor %}
+                                    <!-- <option  class="italize_species"> Trivandrum</option> -->
+
+                            </select>
+                </div>
+                    <br>
+                    <div class="input_box"><input type="text" value="" placeholder="Quantity" id="quantity" name="quantity" required /></div>
+                    <div>
+                    								<label for="propt" class="custom-file-upload" id="upload-file-msg"><b>Upload Timber Photo:</b></label>
+											 <br><input type="file" id="myFile1" name="timber_image"  class="file_type_info" accept=".jpg,.jpeg,.png"  value ="" onchange = "fasterPreview(this,'img_pp');" >
+											 <!-- <a class="btn btn-primary" style="background-color: green;" id ="edit_1"  name="button">EDIT <i class="fa fa-pencil"></i></a> -->
+
+                </div>
+                </div>
+        <div class="modal-footer">
+            <button type="submit" id="btnSubmit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-danger">Close</button>
+        </div>
+                               </form>
+
+        </div>
+    </div>
+</div>
+
+    </div>
+
+
+
+    </div>
+</div>
+
+<div id="All" class="tabcontent scan_table">
+    <div class="cont nice_scroll">
+
+        <div class="wrap">
+                <div class="div2  pending_table" >
+
+        <table id="myTable02" class="table" >
+            <div class="select_filter">
+
+            <select id="sel_application_no" name=1 class="select-application02">
+                <option value="">Select Species </option>
+                {% for no in species %}
+                <option>{{no.name}}</option>
+                <!-- <option>Applicant No 02</option> -->
+                {% endfor %}
+            </select>
+            <select id="sel_application_name" name=4 class="select-application02">
+                <option value="">Select District </option>
+                {% for dis in district_name %}
+                 <option>{{dis.district_name}}</option>
+                {% endfor %}
+            </select>
+            <select id="sel_application_date" name=3 class="select-application02">
+                <option value="">Select Division </option>
+              {% for div in division_areas %}
+                 <option>{{div.name}}</option>
+                {% endfor %}
+            </select>
+
+            </div>
+            <thead>
+
+                <tr style="">
+                    <th>Sr.No</th>
+                    <th>Timber name</th>
+                    <th>Quantity</th>
+                    <th>Division</th>
+                    <th>District</th>
+                    <th>Name</th>
+                    <th>Address</th>
+
+                    <th>Phone number</th>
+
+                    <th>Date</th>
+
+
+
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+
+            </thead>
+    <tbody >
+
+           {% for each in all_data %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                     <td>{{each.timber_name}}</td>
+                    <td>{{each.quantity}}</td>
+                    <td>{{each.division}}</td>
+                     <td>{{each.dist}}</td>
+                    <td>{{each.name}}</td>
+                    <td>{{each.address}}</td>
+                    <td>{{each.phone}}</td>
+                    <td>{{each.date}}</td>
+
+
+
+                    <td>
+
+                        <a href="{{each.timber_image.url}}" class="view_app"><i class="fa fa-eye"></i> View image</a>
+                     &nbsp
+                    </td>
+
+
+                    <td>hai</td>
+                </tr>
+            {% endfor %}
+
+    </tbody>
+        </table>
+                </div>
+
+
+<!--    <div class="div2  scan_table" >-->
+
+<!--        &lt;!&ndash; <table id="myTable01" class="table nice_scroll2" style=""> &ndash;&gt;-->
+<!--        <table id="myTable08" class="table " style="">-->
+<!--            <div class="select_filter">-->
+
+
+<!--            </div>-->
+<!--            <thead>-->
+
+<!--                <tr style="">-->
+<!--                    <th>Sr.No</th>-->
+<!--                    <th>Timber name</th>-->
+<!--                    <th>Quantity</th>-->
+<!--                    <th>Division</th>-->
+<!--                    <th>District</th>-->
+<!--                    <th>Name</th>-->
+<!--                    <th>Address</th>-->
+
+<!--                    <th>Phone number</th>-->
+
+<!--                    <th>Date</th>-->
+
+
+
+<!--                    <th>Image</th>-->
+<!--&lt;!&ndash;                    <th>Actions</th>&ndash;&gt;-->
+<!--                </tr>-->
+
+<!--            </thead>-->
+<!--    <tbody >-->
+
+<!--           {% for each in all_data %}-->
+<!--                <tr>-->
+<!--                    <td>{{forloop.counter}}</td>-->
+<!--                     <td>{{each.timber_name}}</td>-->
+<!--                    <td>{{each.quantity}}</td>-->
+<!--                    <td>{{each.division}}</td>-->
+<!--                     <td>{{each.dist}}</td>-->
+<!--                    <td>{{each.name}}</td>-->
+<!--                    <td>{{each.address}}</td>-->
+<!--                    <td>{{each.phone}}</td>-->
+<!--                    <td>{{each.date}}</td>-->
+
+
+
+<!--                    <td>-->
+
+<!--                        <a href="{{each.timber_image.url}}" class="view_app"><i class="fa fa-eye"></i> View image</a>-->
+<!--                     &nbsp-->
+<!--                    </td>-->
+
+
+<!--&lt;!&ndash;                    <td>hai</td>&ndash;&gt;-->
+<!--                </tr>-->
+<!--            {% endfor %}-->
+
+<!--    </tbody>-->
+<!--        </table>-->
+
+<!--    </div>-->
+
+</div>
+    </div></div>
+
+</body>
+<script type="text/javascript">
+
+    var message = "{{message}}";
+    if(message.length>0)
+    {
+        alert(message);
+    }
+    function openModal2() {
+  document.getElementById("myModal2").style.display = "block";
+}
+function closeModal2(){
+  document.getElementById("myModal2").style.display = "none";
+}
+    function get_qr(app_id){
+        // alert(app_id);
+        $("#log_table tr").remove();
+        openModal2();
+        var token = '{{csrf_token}}';
+        var row='';
+        var tp_qr = '';
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                type: 'POST',
+                url: "../get_log_qr_details/"+app_id,
+                data: {'app_id':app_id},
+                success: function (data) {
+                    // alert(data.message);
+                    // $('#message').text(data.message);
+                    // alert(data.log_details.length);
+                    tp_qr = "<div class='tp_details_class' >Transit Pass QR Code:<div id='tp_qr_code'><img class='qr_img'  src='/static/media/qr_code/"+data.transitpass[0].qr_code_img+"' /></div><a class='btn btn-danger' onclick='printDiv(\"tp_qr_code\")'>Print</a> </div>";
+                    $('.tp_details_class').remove();
+                    $('#tlog-div').prepend(tp_qr);
+                    for(var i=0;i<data.log_details.length;i++){
+                        row='\
+                        <tr>\
+                      <td style="text-align: center;font-size: 16px">'+parseInt(i+1)+'</td>\
+                      <td style="width :300px !important; text-align: center;font-size: 16px">'+data.log_details[i].species_of_tree+'</td>\
+                      <td style="text-align: center;font-size: 16px">'+data.log_details[i].length+'</td>\
+                      <td style="text-align: center;font-size: 16px">'+data.log_details[i].breadth+'</td>\
+                      <td style="text-align: center;font-size: 16px">'+data.log_details[i].volume+'</td>\
+                      <td id="log_qr'+i+'" class="printable-part" >\
+                            <div class="log-qr-item">\
+                            <img title="log_'+i+'" alt="#LS'+i+'" class="qr_img" src="/static/media/qr_code/'+data.log_details[i].log_qr_code_img+'" />\
+                            </div>\
+                      </td>\
+                    <td style="text-align: center;font-size: 16px"><a class="btn btn-danger" onclick="printDiv('+i+')">Print</a> </td>\
+                      </tr>';
+                        $('#log_table').append(row);
+                    }
+
+                    // $('.couldapprove').hide();
+                    // console.log(data);
+                },
+                error: function (data) {
+                    // console.log('An error occurred.');
+                    //alert(data);
+                    // console.log(data);
+                    },
+          });
+        return true;
+    }
+    function printDiv(id)
+{
+//alert(id);
+    $('.log-qr-item-caption').hide();
+if(id=="tp_qr_code"){
+    var divToPrint=document.getElementById('tp_qr_code');
+  }
+  else{
+   var divToPrint=document.getElementById('log_qr'+id);
+  }
+
+  var newWin=window.open('','Print-Window');
+
+  newWin.document.open();
+
+  newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+
+  newWin.document.close();
+
+  setTimeout(function(){newWin.close();},10);
+
+}
+   function printClass()
+{
+
+    var divToPrint = document.getElementsByClassName("printable-part");
+    // var divToPrint=document.getElementById('log_qr'+id);
+    l = divToPrint.length;
+    var newWin=window.open('','Print-Window');
+
+    newWin.document.open();
+    newWin.document.write('<html><body onload="window.print()">');
+    for (var i = 0; i < l; i++){
+            newWin.document.write('<div style="text-align:center;">'+divToPrint[i].innerHTML+
+                           ' <span class="log-qr-item-caption" style="padding-top:-25px;" >#LS'+parseInt(i+1)+'</span></div>');
+    }
+    newWin.document.write('</body></html>');
+
+    newWin.document.close();
+
+    setTimeout(function(){newWin.close();},10);
+
+}
+    $(document).ready(function(){
+            $('.log-qr-item-caption').hide();
+        $(document).on('.dataTable > thead > tr > th[class="sorting"]','click',function(){
+            $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+        })
+    var indexOfMyCol = 2;
+      var table=$('#myTable01').DataTable({
+        "scrollY": 400,
+        "scrollX": true,
+        "bDestroy": true,
+        // colReorder: true,
+        // 'info': false,
+        "columnDefs": [
+            { width: 150, targets: 1 }
+        ],
+        "fixedHeader": {
+            header: true,
+            footer: true
+        },
+        "initComplete": function(settings, json) {
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+        // $('.dataTables_scrollBody').css({'overflow-x':'hidden'});
+    }
+      });
+      var headers = table.columns().header().toArray();
+
+$(headers).on('click', function () {
+    // do something
+     $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+});
+
+      var table2=$('#myTable02').removeAttr('width').DataTable({
+        "scrollY": 400,
+        "scrollX": true,
+        // "scrollX": true,
+        "sScrollXInner": "100%",
+        "bDestroy": true,
+        // "autoWidth": false,
+        //  "columnDefs": [
+        //     { 'width': 150, 'targets': 1 }
+        // ],
+        // scroller: true,
+        // 'colReorder': true,
+        'overflow':true,
+        "fixedHeader": {
+            header: true,
+            footer: true
+        },
+        "initComplete": function(settings, json) {
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+        $("#myTable02").wrap("<div style=' width:100%;position:sticky;'></div>");
+        // $('.dataTables_scrollBody').css({'overflow-x':'hidden'});
+    }
+      });
+      var headers2 = table2.columns().header().toArray();
+
+$(headers2).on('click', function () {
+    // do something
+     $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+});
+var table3=$('#myTable03').removeAttr('width').DataTable({
+        "scrollY": 400,
+        "scrollX": true,
+        // "scrollX": true,
+        "sScrollXInner": "100%",
+        "bDestroy": true,
+        // "autoWidth": false,
+        //  "columnDefs": [
+        //     { 'width': 150, 'targets': 1 }
+        // ],
+        // scroller: true,
+        // 'colReorder': true,
+        'overflow':true,
+        "fixedHeader": {
+            header: true,
+            footer: true
+        },
+        "initComplete": function(settings, json) {
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+        $("#myTable03").wrap("<div style=' width:100%;position:sticky;'></div>");
+        // $('.dataTables_scrollBody').css({'overflow-x':'hidden'});
+    }
+      });
+      var headers3 = table3.columns().header().toArray();
+
+$(headers3).on('click', function () {
+    // do something
+     $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+});
+// var tb4=$('#myTable04').DataTable();
+// tb4.columns.adjust().draw();
+var table4=$('#myTable04').DataTable({
+        "scrollY": 400,
+        "scrollX": true,
+        // "scrollX": true,
+        "sScrollXInner": "100%",
+        "bDestroy": true,
+        // "autoWidth": false,
+        //  "columnDefs": [
+        //     { 'width': 150, 'targets': 1 }
+        // ],
+        // scroller: true,
+        // 'colReorder': true,
+        'overflow':true,
+        "fixedHeader": {
+            header: true,
+            footer: true
+        },
+        "initComplete": function(settings, json) {
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+        $("#myTable04").wrap("<div style=' width:100%;position:sticky;' ></div>");
+            // table4.columns.adjust().draw();
+        // $('.dataTables_scrollBody').css({'overflow-x':'hidden'});
+    }
+      });
+
+      // $('#myTable04').DataTable().columns().adjust();
+      var headers4 = table4.columns().header().toArray();
+$(headers4).on('click', function () {
+    // do something
+     $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+});
+// $('.noc_table').wrap('<div class="dataTables_scroll" />');
+      // table2.columns.adjust().draw();
+
+
+
+        $(".pending_btn").click(function(){
+  $(".pending_table").removeClass("hide");
+  $(".approved_table").addClass("hide");
+  $(".pending_btn").addClass("active");
+  $(".approve_btn").removeClass("active");
+  $(".deemed_approved_table").addClass("hide");
+  $(".deemed_approve_btn").removeClass("active");
+   $(".noc_table").addClass("hide");
+  $(".noc_btn").removeClass("active");
+
+});
+$(".approve_btn").click(function(){
+  $(".approved_table").removeClass("hide");
+  $(".pending_table").addClass("hide");
+  $(".approve_btn").addClass("active");
+  $(".pending_btn").removeClass("active");
+ $(".deemed_approved_table").addClass("hide");
+  $(".deemed_approve_btn").removeClass("active");
+   $(".noc_table").addClass("hide");
+  $(".noc_btn").removeClass("active");
+});
+$(".deemed_approve_btn").click(function(){
+    $(".deemed_approved_table").removeClass("hide");
+  $(".approved_table").addClass("hide");
+  $(".pending_table").addClass("hide");
+  $(".deemed_approve_btn").addClass("active");
+  $(".approve_btn").removeClass("active");
+  $(".pending_btn").removeClass("active");
+  $(".noc_table").addClass("hide");
+  $(".noc_btn").removeClass("active");
+});
+$(".noc_btn").click(function(){
+     $(".noc_table").removeClass("hide");
+  $(".noc_btn").addClass("active");
+  $(".approved_table").addClass("hide");
+  $(".pending_table").addClass("hide");
+    $(".deemed_approved_table").addClass("hide");
+  $(".deemed_approve_btn").removeClass("active");
+  $(".approve_btn").removeClass("active");
+  $(".pending_btn").removeClass("active");
+  // $('#myTable04').DataTable();
+});
+
+    $('.select-application01').on('change',function(){
+        // $(this).attr('name').val()
+        var sel_applicant01 =$(this).attr('name');
+        var filter_applicant = $(this).val();
+        // table.columns(2).search(filter_applicant).draw();
+        console.log('yes;;');
+
+       if(filter_applicant==''){
+            console.log(filter_applicant);
+        table.columns(sel_applicant01).search('').draw();
+        }
+        else{
+
+        table.columns(sel_applicant01).search(filter_applicant).draw();
+        }
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+    });
+
+        $('.select-application02').on('change',function(){
+        // $(this).attr('name').val()
+        var sel_applicant01 =$(this).attr('name');
+        var filter_applicant = $(this).val();
+        // table.columns(2).search(filter_applicant).draw();
+        console.log('yes;;');
+
+       if(filter_applicant==''){
+            console.log(filter_applicant);
+        table2.columns(sel_applicant01).search('').draw();
+        }
+        else{
+
+        table2.columns(sel_applicant01).search(filter_applicant).draw();
+        }
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+    });
+
+        $('.select-application03').on('change',function(){
+        // $(this).attr('name').val()
+        var sel_applicant01 =$(this).attr('name');
+        var filter_applicant = $(this).val();
+        var token = '{{csrf_token}}';
+        // pushData(filter_applicant);
+        // table2.columns(2).search(filter_applicant).draw();
+        if(filter_applicant==''){
+            console.log(filter_applicant);
+        table3.columns(sel_applicant01).search('').draw();
+        }
+        else{
+
+        table3.columns(sel_applicant01).search(filter_applicant).draw();
+        }
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+
+    });
+        $('.select-application04').on('change',function(){
+        // $(this).attr('name').val()
+        var sel_applicant01 =$(this).attr('name');
+        var filter_applicant = $(this).val();
+        var token = '{{csrf_token}}';
+        // pushData(filter_applicant);
+        // table2.columns(2).search(filter_applicant).draw();
+        if(filter_applicant==''){
+            console.log(filter_applicant);
+        table4.columns(sel_applicant01).search('').draw();
+        }
+        else{
+
+        table4.columns(sel_applicant01).search(filter_applicant).draw();
+        }
+        $('.dataTables_scrollBody thead tr').css({'visibility':'collapse'});
+
+    });
+    });
+
+$(document).ready(function(){
+    // {% if area_range_name == '' %}
+    // $("#filter-range").hide();
+    // {% else %}
+    // $("#slide-toggle").toggleClass('fa-filter fa-remove');
+    // {% endif %}
+    //     $(".slide-toggle").click(function(){
+    //         $(".filter-range").animate({
+    //             width: "toggle"
+    //         });
+
+    //         $("#slide-toggle").toggleClass('fa-filter fa-remove');
+    //     });
+        $('#range_name_select').on('change',function(){
+            $('#select-form').submit();
+        });
+        $('#div_name_select').on('change',function(){
+            $('#select-form').submit();
+        });
+    });
+</script>
+<script>
+// Select modal
+var mpopup = document.getElementById('mpopupBox');
+
+// Select trigger link
+var mpLink = document.getElementById("mpopupLink");
+
+// Select close action element
+var close = document.getElementsByClassName("btn-danger")[0];
+
+// Open modal once the link is clicked
+mpLink.onclick = function() {
+    mpopup.style.display = "block";
+};
+
+// Close modal once close element is clicked
+close.onclick = function() {
+    mpopup.style.display = "none";
+};
+
+// Close modal when user clicks outside of the modal box
+window.onclick = function(event) {
+    if (event.target == mpopup) {
+        mpopup.style.display = "none";
+    }
+};
+</script>
+<script type="text/javascript">
+$(document).ready(function () {
+
+    $("#btnSubmit").click(function (event) {
+
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+
+        // Get form
+var formData = new FormData();
+formData.append('name', $('#name').val());
+formData.append('address', $('#address').val());
+formData.append('phone', $('#number').val());
+formData.append('timber_name', $('#timber_name').val());
+formData.append('division', $('#div_sel').val());
+formData.append('dist', $('#dist').val());
+formData.append('quantity', $('#quantity').val());
+var token = '{{csrf_token}}';
+
+$.ajax({
+   headers: { "X-CSRFToken": token },
+   url : '{% url "buyer_requirement" %}',
+   type : 'POST',
+   data : formData,
+   processData: false,
+   contentType: false,
+   success : function(data) {
+       	swal('TIGRAM','Successfully Added','success');
+		setTimeout(function(){location.reload(true);},5000);
+   }
+});
+});
+});
+</script>
+<script>
+    function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
+<script>
+  @keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+</script>
+<script>
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+                       function myFunction() {
+  var x = document.getElementById("snackbar");
+  x.className = "show";
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+// if(messages){
+myFunction();
+</script>
+</html>
+{% endblock %}

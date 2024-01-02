@@ -1,0 +1,714 @@
+{% extends 'my_app/tigram/top_bant.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+    <head>
+
+
+    <!-- Other CSS and JavaScript imports -->
+
+    <!-- Add jQuery library -->
+    {% comment %} <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> {% endcomment %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="{% static 'js/ajax.js' %}"></script>
+    <!-- Add Select2 library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<!--	        <meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--        <link rel="stylesheet" href="{% static 'css/dash.css' %}">-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+		<script src="https://use.fontawesome.com/7abfe604da.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+		<link rel="stylesheet" href="https://use.fontawesome.com/15e405067d.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/15e405067d.css">
+
+
+        <style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+
+
+*{ margin:0px; padding:0px; text-decoration:none; list-style:none; font-weight:normal; box-sizing:border-box;}
+
+body{
+ font-family: 'Cairo', sans-serif;
+background:#fff;
+}
+.clearfix{
+clear:both;
+}
+/*.top_band{
+height:50px;
+display:flex;
+align-items:center;
+padding:0px 20px;
+justify-content:space-between;
+}
+.top_band .links a{
+margin:0px 10px;
+text-decoration:underline;
+}
+.top_band button{
+cursor:pointer;
+}*/
+.cont{
+width:100%;
+background-image:url("{% static 'images/bg_05.jpg' %}");
+background-repeat:no-repeat;
+background-position:center center;
+width:100%;
+overflow-y: auto;
+padding-top:calc(50vh - 220px);
+
+}
+.form_wrapper {
+    display: fixed;
+    justify-content: center;
+
+}
+
+.pro_form{
+width:400px;
+height:15rem;
+background:rgba(255,255,255,0.9);
+margin:auto;
+
+}
+.pro_form .title{
+padding:10px 20px;
+font-size:16px;
+border:1px solid #ccc;
+text-transform:uppercase;
+font-weight:bold;
+margin-bottom:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#fff;
+text-align:center;
+}
+.pro_form .title span{
+font-weight:bold;
+}
+.edit_btn{
+background:#efefef;
+padding:5px 10px;
+cursor:pointer;
+box-shadow:1px 1px 5px #ccc;
+}
+.edit_btn:hover{
+background:#000;
+color:#fff;
+}
+.user_img{
+width:150px;
+height:150px;
+border-radius:50%;
+overflow:hidden;
+margin:auto;
+margin-bottom:20px;
+position:relative;
+}
+.edit_img{
+position:absolute;
+top:calc(75px - 20px);
+left:calc(75px - 20px);
+background:none;
+border:none;
+cursor:pointer;
+outline:none;
+opacity:0.5;
+}
+.edit_img:hover{
+opacity:1;
+}
+.user_img img{
+width:100%;
+}
+.user_details{
+padding:0px 20px;
+margin-bottom:30px;
+}
+
+.user_details .lbl{
+width:100px;
+float:left;
+font-weight:700;
+font-size:14px;
+margin-top:8px;
+}
+.user_details .input_box{
+width:100%;
+margin-bottom:20px;
+}
+
+.user_details .input_box input,.user_details .input_box textarea{
+width:100%;
+padding:7px;
+font-family: 'Cairo', sans-serif;
+font-size:16px;
+line-height:22px;
+outline:none;
+border:1px solid #ccc;
+background:#fff;
+}
+.user_details .input_box textarea{
+height:105px;
+resize:none;
+padding:7px;
+margin-bottom:20px;
+font-size:16px;
+line-height:22px;
+}
+    .user_details .cutting/transit p {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .user_details .cutting/transit label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .user_details .cutting/transit input[type='radio'] {
+        margin-right: 5px;
+    }
+.top_band button{
+background:none;
+border:none;
+font-size:16px;
+}
+.cancel_update{
+text-align:center;
+
+}
+.cancel_update button{
+background:none;
+border:none;
+padding:7px 15px;
+color:#fff;
+text-transform:uppercase;
+margin:0px 10px;
+cursor:pointer;
+cursor:pointer;
+box-shadow:1px 1px 5px #ccc;
+font-weight:700;
+font-size:14px;
+}
+.cancel_btn{
+background:#000 !important;
+
+}
+.update_btn{
+background: #6174ff !important;
+}
+
+.login_btn{
+width:200px;
+}
+
+
+
+.view_mode input,.view_mode textarea{
+}
+.view_mode .cancel_update{
+display:none;
+}
+.view_mode .edit_img{
+display:none;
+}
+
+.forgot_regis{
+display:flex;
+justify-content:space-between;
+padding:20px;
+}
+.forgot_regis a{
+text-decoration:underline;
+line-height:30px;
+
+}
+.forgot_pass{
+color:red;
+}
+.regis{
+color:#222;
+}
+</style>
+		<style>
+    /* Add some styles to the div with the class 'input_box' */
+    .input_box {
+        margin-bottom: 20px;
+    }
+
+    /* Style the 'Select User Type' text */
+    .input_box span {
+        font-weight: bold;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    /* Style the dropdown itself */
+    .input_box select {
+        width: 200px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #555;
+    }
+    .species_columns {
+    column-count: 2;
+    column-gap: 20px; /* Adjust the gap between columns as needed */
+    }
+</style>
+        <style>
+    .additional_content {
+        display: none;
+        margin-top: 20px;
+        margin-bottom:20px;
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .additional_content .species_list {
+        margin-bottom: 10px;
+    }
+
+    .additional_content .species_list p {
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+    .additional_content .species_list ul {
+        list-style: disc;
+        margin-left: 20px;
+    }
+
+    .additional_content .species_list li {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .additional_content .question p {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .additional_content .question label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .additional_content .question input[type='radio'] {
+        margin-right: 5px;
+    }
+</style>
+</head>
+<body>
+    {% if messages %}
+
+    <ul class="messages">
+        {% for message in messages %}
+        <script>
+         swal("{{message}}")
+        </script>
+
+        {% endfor %}
+    </ul>
+    {% endif %}
+<!--<h2>select_village</h2>-->
+
+ <form method="POST" action="">
+        {% csrf_token %}
+
+        <div class="cont">
+            <div class="pro_form">
+                <div class="title"><span></span></div>
+
+                <div class="user_details">
+
+                     <div class="cutting/transit" >
+                        <p><b>Applying for Cutting or Transit Pass</b></p>
+                        <label><br>
+                            <input type="radio" name="cutting" value="Cutting Permission" onclick="che(this)" > Cutting Permission
+                        </label><br>
+                        <label>
+                            <input type="radio" name="cutting" value="Transit Pass"  onclick="che(this)"> Transit Pass
+                        </label>
+                     </div>
+                     <script>
+                        function che(c){
+                            if(c.value=="Cutting Permission"){
+                                document.getElementById("Cutting Permission").style.display = "block"
+                                document.getElementById("coffee").style.display = "block"
+                                document.getElementById("Transit Pass").style.display = "none"
+                                document.getElementById('village').required = true;
+<!--                                document.getElementById('form').required = true;-->
+                                document.getElementById('transit_num').required = false;
+                                document.getElementById("123").style.display = "none"
+                            }
+                            else{
+                                document.getElementById("Cutting Permission").style.display = "none"
+                                document.getElementById("coffee").style.display = "none"
+                                document.getElementById("Transit Pass").style.display = "block"
+                                document.getElementById('village').required = false;
+<!--                                document.getElementById('form').required = false;-->
+                                document.getElementById('transit_num').required = true;
+                                document.getElementById("123").style.display = "block"
+
+                            }
+
+                        };
+
+                     </script>
+<script>
+    $(document).ready(function() {
+        $("#village").select2({
+            placeholder: "Select village",
+            allowClear: true,
+        });
+
+        $("#village").change(function() {
+            var selectedVillage = $(this).val();
+            var notifiedVillages = JSON.parse('{{ notified_villages_json|safe }}');
+            if (notifiedVillages.includes(selectedVillage)) {
+                $(".additional_content").show();
+                document.getElementById("123").style.display = "none"
+            } else {
+                $(".additional_content").hide();
+                document.getElementById("123").style.display = "block"
+            }
+        });
+<!--        $("form").submit(function(event) {-->
+<!--            var selectedCoffee = $("input[name='coffee']:checked").val();-->
+<!--            if (selectedCoffee === undefined) {-->
+<!--                $(".error-message").show();  // Show the error message if no option is selected-->
+<!--                event.preventDefault();      // Prevent form submission-->
+<!--            } else {-->
+<!--                $(".error-message").hide();  // Hide the error message if an option is selected-->
+<!--            }-->
+<!--        });-->
+
+        // Handle form submission
+
+    });
+</script>
+                    <div class="coffee" id="coffee" style="display:none">
+                            <p><b>Whether your land falls under Cardamom / Coffee plantation?</b></p>
+                            <label>
+                                <input type="radio" name="coffee" value="Yes" > Yes
+                            </label>
+                            <label>
+                                <input type="radio" name="coffee" value="No" > No
+                            </label>
+<!--                        <p class="error-message" style="color: red; display: none;">Please select an option.</p>-->
+                        </div>
+                     <div class="input_box" style="display: none;" id="Cutting Permission" >
+
+                            <label for="village" class="required"><b>Village:</b></label>
+                            <select name="village" id="village" class="village" >
+                                <option value="">Select village</option>
+                                {% for village in villages %}
+                                    <option value="{{ village.village_name }}">{{ village.village_name }}</option>
+                                {% endfor %}
+                            </select>
+
+                    </div>
+
+                    <div style="display: none;" id="Transit Pass" >
+                        <label for="transit_num" class="required"><b>Cutting Permission Number</b></label>
+                        <input type="text" name="transit_num" id="transit_num" style="height:30px;">
+                    </div>
+                </div>
+
+
+
+                <div class="additional_content" style="display: none;">
+                    <div class="species_list">
+                        <p><b>Species Names:</b></p>
+                          <div class="species_columns">
+                            <p>Coconut</p>
+                            <p>Rubber</p>
+                            <p>Cashew</p>
+                            <p>Tamarind</p>
+                            <p>Mango</p>
+                            <p>Jack Fruit Tree</p>
+                            <p>Kodampuli</p>
+                            <p>Matti</p>
+                            <p>Arecanut</p>
+                            <p>Konna</p>
+                            <p>Seema Konna</p>
+                            <p>Nelli</p>
+                            <p>Neem</p>
+                            <p>Murukku</p>
+                            <p>Jathi</p>
+                            <p>Albezia</p>
+                            <p>Silk cotton</p>
+                            <p>Acacia auraculiformis</p>
+                            <p>Mangium</p>
+                            <p>Anhili</p>
+                            <p>Kilimaram</p>
+                            <p>Manchadimaram</p>
+                            <p>Vatta</p>
+                            <p>Palm tree</p>
+                            <p>Aranamaram</p>
+                            <p>Eucalyptus</p>
+                            <p>Seemaplavu</p>
+                            <p>Paala</p>
+                          </div>
+                    </div>
+                    <div class="question">
+                        <p><b>Is Your Species Are In The Above List?</b></p>
+                        <label>
+                            <input type="radio" name="proceed" value="yes" onchange="species_ck()"> Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="proceed" value="no" onchange="species_ck()"> No
+                        </label>
+                    </div>
+
+                       <script>
+
+                        function species_ck(){
+                            var selectedOption = $(".additional_content input[type='radio']:checked").val();
+                    if (selectedOption === "yes") {
+                        // Show the pop-up message for 'yes' option
+
+                        document.getElementById("123").style.display = "none"
+                        swal("Pop-up Message", "As per Section 6(3)(ii) of the The Kerala Promotion of Tree Growth in Non-forest areas Act, 2005, such prior permission is not required for the cutting and removal of trees mentioned in the schedule", "info").then(() => { window.history.back(); });
+                        // Proceed with form submission
+                        
+
+                    } else if (selectedOption === "no") {
+                        // Redirect to 'notified_application_form' page for 'no' option
+                        document.getElementById("123").style.display = "block"
+                    }
+                        }
+                       </script>
+
+<!--                    <div class="additional_content_for_no" style="display: none;">-->
+<!--                        <div class="question">-->
+<!--                            <p><b>Extent of land is below 1 Ha:</b></p>-->
+<!--                            <label>-->
+<!--                                <input type="radio" name="reason" value="yes"> Yes-->
+<!--                            </label>-->
+<!--                            <label>-->
+<!--                                <input type="radio" name="reason" value="no"> No-->
+<!--                            </label>-->
+<!--                            &lt;!&ndash; Add more options for the reason if needed &ndash;&gt;-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                     <div class="additional_content_for_no2" style="display: none;">-->
+<!--                        <div class="question">-->
+<!--                            <p><b> Are  you  applying  for  any  of  the  9  specified  trees  given  below?:</b></p>-->
+<!--                                                <div class="species_list">-->
+<!--                        <p><b>Species Names:</b></p>-->
+<!--                          <div class="species_columns">-->
+
+<!--                            <p>Chadachi</p>-->
+<!--                            <p>Chandana vempu</p>-->
+<!--                            <p>Ebony</p>-->
+<!--                            <p>Irul</p>-->
+<!--                            <p>Kampakam</p>-->
+<!--                            <p>Rosewood</p>-->
+<!--                            <p>Teak</p>-->
+<!--                            <p>Thempavu</p>-->
+<!--                            <p>Vellakil</p>-->
+
+<!--                          </div>-->
+<!--                    </div>-->
+
+<!--                            <label>-->
+<!--                            </label>-->
+<!--                            <label>-->
+<!--                                <input type="radio" name="reason" value="no"> No-->
+<!--                            </label>-->
+<!--                            &lt;!&ndash; Add more options for the reason if needed &ndash;&gt;-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                </div>
+
+                 <div class="cancel_update">
+                        <button type="submit"  class="update_btn" style="display:none" id="123">Submit</button>
+
+                     </div><br><br>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </form>
+
+<!--<script>-->
+<!--	 var temp = '<option value="">Select Village</option>'-->
+<!--                            // $('#taluka').val(data.div_list[0].taluka_name);-->
+<!--                            $('#village').empty();-->
+<!--                            for (i=0;i<lt;i++){-->
+<!--                                temp+='<option value=' + data.div_list[i].village_name + '>' + data.div_list[i].village_name + '</option>'-->
+<!--                            }-->
+<!--                            // console.log(temp,'$$$$$$$$$$$$$$$$$$$$$$$$')-->
+<!--                            $('#village').append(temp);-->
+
+<!--                        // alert(data.message);-->
+<!--                        // location.reload(true);-->
+<!--                        }});-->
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        // Initialize Select2 for the village dropdown-->
+<!--        $("#village").select2({-->
+<!--            placeholder: "Select village",-->
+<!--            allowClear: true,-->
+<!--        });-->
+
+<!--        // Function to show/hide the Additional Content based on selected village-->
+<!--        function toggleAdditionalContent() {-->
+<!--            var selectedVillage = $("#village").val();-->
+<!--            var notifiedVillages = ["Tholicode", "Mannurkara"];-->
+<!--            var selectedOption = $(".additional_content input[name='proceed']:checked").val();-->
+
+<!--            if (notifiedVillages.includes(selectedVillage)) {-->
+<!--                $(".additional_content").show();-->
+<!--                if (selectedOption === "yes") {-->
+<!--                    $(".additional_content_for_no").hide();-->
+<!--                    $(".additional_content_for_no2").hide();-->
+<!--                } else {-->
+<!--                    $(".additional_content_for_no").hide();-->
+<!--                    $(".additional_content_for_no2").hide();-->
+<!--                }-->
+<!--            } else {-->
+<!--                $(".additional_content").hide();-->
+<!--                $(".additional_content_for_no").hide();-->
+<!--                $(".additional_content_for_no2").hide();-->
+<!--            }-->
+<!--        }-->
+
+<!--        // Show/hide Additional Content on initial load-->
+<!--        toggleAdditionalContent();-->
+
+<!--        // Show/hide Additional Content on village selection change-->
+<!--        $("#village").change(function() {-->
+<!--            toggleAdditionalContent();-->
+<!--        });-->
+
+<!--        // Show/hide Additional Content for "No" radio button selection-->
+<!--        $(".additional_content input[name='proceed']").change(function() {-->
+<!--            var selectedOption = $(this).val();-->
+<!--            if (selectedOption === "yes") {-->
+<!--                // Show the pop-up message for 'yes' option-->
+<!--                swal("Pop-up Message", "As per Section 6(3)(ii) of the The Kerala Promotion of Tree Growth in Non-forest areas Act, 2005, such prior permission is not required for the cutting and removal of trees mentioned in the schedule", "info").then(function() {-->
+<!--                    // Show the additional question after closing the pop-up message-->
+<!--                    $(".additional_content_for_no").hide();-->
+<!--                    $(".additional_content_for_no2").hide();-->
+<!--                });-->
+<!--            } else {-->
+<!--                // Show the "Extent of land is below 1 Ha" question for 'no' option-->
+<!--                $(".additional_content_for_no").show();-->
+<!--                $(".additional_content_for_no2").hide();-->
+<!--            }-->
+<!--        });-->
+
+<!--        // Show/hide Additional Content for "No" radio button selection of the first additional question-->
+<!--        $(".additional_content_for_no input[name='reason']").change(function() {-->
+<!--            var selectedOption = $(this).val();-->
+<!--            if (selectedOption === "yes") {-->
+<!--                // Show the pop-up message for 'yes' option-->
+<!--                swal("New Pop-up Message", "As per Section 6(3)(i) of the The Kerala Promotion of Tree Growth in Non-forest areas Act , 2005 the small holders in the area notified under this sub section are free to cut and remove any tree  except  the  specified  trees", "info").then(function() {-->
+<!--                    // Show the additional question after closing the new pop-up message-->
+<!--                    $(".additional_content_for_no2").show();-->
+<!--                });-->
+<!--            } else {-->
+<!--                // Hide the second additional question if the user selects 'No'-->
+<!--                $(".additional_content_for_no2").hide();-->
+<!--            }-->
+<!--        });-->
+
+<!--        // Handle form submission-->
+<!--        $("form").submit(function(event) {-->
+<!--            event.preventDefault();-->
+<!--            var selectedVillage = $("#village").val();-->
+<!--            var notifiedVillages = ["Tholicode", "Mannurkara"];-->
+<!--            var selectedOption = $(".additional_content input[name='proceed']:checked").val();-->
+
+<!--            if (notifiedVillages.includes(selectedVillage)) {-->
+<!--                if (selectedOption === "yes") {-->
+<!--                    // Show the pop-up message for 'yes' option-->
+<!--                    swal("Pop-up Message", "As per Section 6(3)(ii) of the The Kerala Promotion of Tree Growth in Non-forest areas Act, 2005, such prior permission is not required for the cutting and removal of trees mentioned in the schedule", "info").then(function() {-->
+<!--                        // Show the additional question after closing the pop-up message-->
+<!--                        $(".additional_content_for_no").hide();-->
+<!--                        $(".additional_content_for_no2").hide();-->
+<!--                    });-->
+<!--                } else {-->
+<!--                    // Redirect to 'notified_application_form' page for 'no' option-->
+<!--                    window.location.href = "{% url 'notified_application_form' %}";-->
+<!--                }-->
+<!--            } else {-->
+<!--                // Redirect to 'application_form' for non-notified villages-->
+<!--                window.location.href = "{% url 'application_form' %}";-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $("#village").select2({-->
+<!--            placeholder: "Select village",-->
+<!--            allowClear: true,-->
+<!--        });-->
+
+<!--        // Function to validate if the user has selected 'yes' or 'no' option-->
+<!--        function validateAdditionalContent() {-->
+<!--            var selectedOption = $(".additional_content input[type='radio']:checked").val();-->
+<!--            if (selectedOption === undefined) {-->
+<!--                swal("Validation Error", "Please select 'Yes' or 'No' for the question.", "error");-->
+<!--                return false;-->
+<!--            }-->
+<!--            return true;-->
+<!--        }-->
+
+<!--        // Handle form submission-->
+<!--        $("form").submit(function(event) {-->
+<!--            var selectedVillage = $("#village").val();-->
+<!--            var notifiedVillages = JSON.parse('{{ notified_villages_json|safe }}');-->
+
+<!--            if (notifiedVillages.includes(selectedVillage)) {-->
+<!--                $(".additional_content").show();-->
+<!--                // If the user is in notified villages, validate the additional content-->
+<!--                if (!validateAdditionalContent()) {-->
+<!--                    event.preventDefault(); // Prevent form submission if validation fails-->
+<!--                    return;-->
+<!--                }-->
+<!--                var selectedOption = $(".additional_content input[type='radio']:checked").val();-->
+<!--                if (selectedOption === "yes") {-->
+<!--                    swal("Pop-up Message", "As per Section 6(3)(ii) of the The Kerala Promotion of Tree Growth in Non-forest areas Act, 2005, such prior permission is not required for the cutting and removal of trees mentioned in the schedule", "info");-->
+<!--                } else {-->
+<!--                    window.location.href = "{% url 'notified_application_form' %}";-->
+<!--                }-->
+<!--            } else {-->
+<!--                window.location.href = "{% url 'application_form' %}";-->
+<!--            }-->
+<!--            event.preventDefault();-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+
+
+
+
+
+</body>
+</html>
+{%endblock%}

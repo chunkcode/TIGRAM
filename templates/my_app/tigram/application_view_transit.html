@@ -1,0 +1,899 @@
+{% extends 'my_app/tigram/top_band_cont.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/viewapplication.css' %}">
+	<!-- <link rel="stylesheet" href="css/viewapplication.css"> -->
+    <!-- <link rel="stylesheet" href="{% static 'css/dash.css' %}"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{% static 'js/jquery-3.6.0.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-5.0.0-beta2-dist/css/bootstrap.min.css' %}"> -->
+    <!-- <script type="text/javascript" src="{% static 'bootstrap-5.0.0-beta2-dist/js/bootstrap.min.js' %}"></script> -->
+<style type="text/css">
+  /*.img-gallery1 {
+    display: block;
+    max-width:180px;
+    max-height:180px;
+    width: auto;
+    height: auto;
+}*/
+.modal{
+    overflow: auto;
+}
+#map_content {
+  display: none;
+  position: absolute;
+  z-index: -1;
+  /*padding-top: 130px;*/
+  left: 3%;
+  top: 5%;
+  width: 95%;
+  align-self: center;
+  height: 95%;
+  overflow: auto;
+  /*background-color: black;*/
+    /*z-index:100;*/
+    z-index:101;
+     /*z-index: -1;*/
+}
+
+/* Modal Content */
+#myModal3content{
+  position: relative;
+
+  /*background-color: greenyellow;*/
+  margin: auto;
+  padding: 0;
+  
+}
+.overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  /*background-color: rgba(0,0,0,0.5); */
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+</style>
+<style>
+    #myModal2 {
+display: none;
+position: absolute;
+z-index: 1;
+padding-top: 130px;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+/*background-color: black;*/
+z-index:100;
+}
+
+#map_content {
+display: none;
+position: absolute;
+z-index: 1;
+/*padding-top: 130px;*/
+left: 5%;
+top: 130px;
+width: 90%;
+align-self: center;
+height: 90%;
+overflow: auto;
+/*background-color: black;*/
+z-index:100;
+}
+.cursor {
+cursor: pointer;
+}
+#myModal2content{
+ position: relative;
+background-color: greenyellow;
+margin: auto;
+padding: 0;
+width: 30%;
+max-width: 1200px;
+}
+/* Modal Content */
+.myModal3content{
+position: relative;
+/*background-color: greenyellow;*/
+margin: auto;
+padding: 0;
+
+}
+
+/* The Close Button */
+.close {
+color: white;
+position: absolute;
+top: 10px;
+right: 25px;
+font-size: 35px;
+font-weight: bold;
+}
+#update-btn:hover {
+/*color:#fff;
+background: white;*/
+}
+
+.close:hover,
+.close:focus {
+color: #999;
+text-decoration: none;
+cursor: pointer;
+}/*
+    .nav{
+    position:fixed;
+    width:100%;
+    }*/
+    #tab {
+        display: none;
+        color: #000;
+        position: relative;
+       padding:10px;
+       margin:10px 0px;
+        margin-top: 5px;
+    }
+
+    #veh {
+        display: none;
+        color: #000;
+        position: relative;
+        padding: 10px;
+        margin-top: 5px;
+    }
+    .add_log{
+    background:#fff;
+    }
+    .add_log thead{
+    margin-bottom:5px;
+    padding-bottom:5px;
+    }
+    .add_log thead td{
+    text-transform:initial;
+    padding-left:5px;
+        font-size: 14px;
+font-weight: 600;
+padding-bottom:5px;
+    }
+    .add_log input{
+    margin:0px !important;
+    padding:5px 7px !important;
+    border:none;
+    outline:none !important;
+    }
+    
+    .add_log tbody{
+    border:1px solid #ccc;
+    }
+    .add_log tbody td{
+    padding:0px !important;
+    margin-right:10px;
+    border:1px solid #ccc;
+    }
+
+    .add_log table{
+    border-spacing:0px;
+    }
+
+    .nice_scroll::-webkit-scrollbar {
+width: 10px;
+}
+
+/*.nice_scroll::-webkit-scrollbar-track {
+background: #fff;
+}
+
+.nice_scroll::-webkit-scrollbar-thumb {
+background: #a7a7a7;
+}*/
+
+#addbutton{
+margin-left:10px;
+margin-right:10px;
+background:#6174ff;
+border-radius:0px;
+width:20px;
+height:20px;
+border:none;
+outline:none;
+color:#fff;
+}
+#addbutton02{
+margin-left:10px;
+margin-right:10px;
+background:#6174ff;
+border-radius:0px;
+width:20px;
+height:20px;
+border:none;
+outline:none;
+color:#fff;
+}
+.remove_btn button{
+background:black;
+color:#fff;
+margin-left:10px;
+border-radius:none;
+width:20px;
+height:20px;
+border:none;
+outline:none;
+}
+.form{
+padding-top:90px;
+}
+.file_upload{
+margin-bottom:20px;
+}
+/*.file_upload label{
+width:200px;
+display:inline-block;
+
+}*/
+.file_upload label{
+width:200px;
+display:inline-block;
+
+}
+.file_upload input[type="file"]::-webkit-file-upload-button {
+background: #fff;
+color:#222;
+padding:5px 15px;
+margin:0px 10px;
+border:1px solid #aaa;
+cursor:pointer;
+width: 130px;
+}
+.file_upload input[type="file"]::-webkit-file-upload-button:hover {
+background: #000;
+color:#fff;
+}
+
+.view_log .tbl_head{
+background:#444;
+display:flex;
+}
+.view_log .tbl_head .txt{
+width:calc(100% / 7);
+padding-left:10px;
+padding-bottom:5px;
+font-size:16px;
+font-weight:600;
+color:#fff;
+}
+.view_log .tbl_head .txt.serial{
+width:55px;
+}
+.view_log .tbl_head .txt.species{
+width:200px;
+}
+.view_log .tbl_body{
+background:#fff;
+}
+.view_log .tbl_body .row{
+display:flex;
+border-bottom:1px solid #ccc;
+}
+.view_log .tbl_body .cell{
+width:calc(100% / 7);
+padding-left:10px;
+font-size:16px;
+line-height:24px;
+padding:10px;
+}
+.view_log .tbl_body .cell.serial{
+width:50px;
+}
+.view_log .tbl_body .cell.species{
+width:205px !important;
+}
+
+.personal_details hr{
+margin-bottom:15px;
+}
+
+.personal_details label{
+
+display:block;}
+
+.tree_check label{
+font-size:16px;
+line-height:16px;
+font-weight:600;
+}
+.tree_check input{
+font-size:16px;
+width:16px;
+height:16px;
+margin-right:5px;
+
+}
+.required:after {
+content:" *";
+color: red;
+}
+#snackbar {
+visibility: hidden;
+min-width: 250px;
+margin-left: -125px;
+/*background-color: #333;*/
+background-color: #fff;
+color: #fff;
+text-align: center;
+border-radius: 2px;
+padding: 16px;
+position: fixed;
+z-index: 1;
+left: 50%;
+/*bottom: 30px;*/
+top: 140px;
+font-size: 17px;
+}
+
+#snackbar.show {
+visibility: visible;
+-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/*@-webkit-keyframes fadein {
+from {bottom: 0; opacity: 0;}
+to {bottom: 30px; opacity: 1;}
+}*/
+
+@-webkit-keyframes fadein {
+from {top: 0; opacity: 0;}
+to {top: 140px; opacity: 1;}
+}
+
+@keyframes fadein {
+/*  from {bottom: 0; opacity: 0;}
+to {bottom: 30px; opacity: 1;}*/
+from {top: 0; opacity: 0;}
+to {top: 140px; opacity: 1;}
+}
+
+/*@-webkit-keyframes fadeout {
+from {bottom: 30px; opacity: 1;}
+to {bottom: 0; opacity: 0;}
+
+}*/
+@-webkit-keyframes fadeout {
+from {top: 140px; opacity: 1;}
+to {top: 0; opacity: 0;}
+
+}
+
+@keyframes fadeout {
+/*  from {bottom: 30px; opacity: 1;}
+to {bottom: 0; opacity: 0;}*/
+from {top: 140px; opacity: 1;}
+to {top: 0; opacity: 0;}
+}
+
+
+/* Tooltip container */
+.tooltip {
+position: relative;
+display: inline-block;
+border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+visibility: hidden;
+width: 440px;
+max-width: 320px;
+/*background-color: black;*/
+background-color: black;
+border-color:black ;
+border: 2px;
+/*color: #fff;*/
+color: #fff;
+text-align: center;
+padding: 5px 0;
+border-radius: 6px;
+
+/* Position the tooltip text - see examples below! */
+position: absolute;
+z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+visibility: visible;
+}
+
+.cancel{
+background:#f44336;
+font-size:18px;
+color:#ffff;
+font-family: 'Roboto', sans-serif;
+float:right;
+}
+.species_columns p{
+font_size:16px;
+margin: 0px;
+padding: 0px;
+list-style: none;
+font-weight: 600;
+box-sizing: border-box;
+}
+</style>
+<style>
+    .tree__nested-items {
+list-style-type: none;
+margin: 0;
+padding: 0;
+padding-left: 70px;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+}
+
+.tree__item {
+width: 70%;
+height: 30px;
+line-height: 30px;
+border: 2px solid #dedede;
+background-color: #f7f8fa;
+border-radius: 7px;
+padding: 10px 25px;
+margin: 10px;
+}
+
+.tree__item--nested {
+position: relative;
+}
+
+/* line */
+.tree__item--nested:before {
+content: "";
+position: absolute;
+bottom: 50%;
+/* padding of container - 10px */
+left: -60px;
+/* padding of container - 10px */
+width: 60px;
+/* 3 * half height + half of border radius */
+height: calc(150% + 7.5px);
+border-bottom: inherit;
+border-left: inherit;
+border-bottom-left-radius: 15px;
+/* don't overlap items */
+z-index: -1;
+}
+
+/* arrow */
+.tree__item--nested:after {
+content: "";
+position: absolute;
+/* border-width - 1px */
+left: -8px;
+bottom: calc(50% - 6px);
+border-color: transparent;
+border-left-color: inherit;
+border-style: inherit;
+border-width: 7px;
+}
+table {
+font-family: arial, sans-serif;
+border-collapse: collapse;
+width: 100%;
+}
+
+td, th {
+border: 1px solid #cecece;
+text-align: left;
+padding: 8px;
+}
+
+tr:nth-child(even) {
+background-color: #dddddd;
+}
+</style>
+</head>
+
+<body style="overflow: hidden;">
+    
+       
+    
+  
+	<div class="cont_sec cont nice_scroll">	
+		<div class="wrap">
+             <h1 style="text-align: center;">Application Details   </h1>
+    <table class="table1 hide">
+        <tr class="layout hide">
+            <th id="col2" style="text-align:center; ">TIGRAM</th>
+        </tr>
+    </table>
+    <table class="table2" style="width: 70%;">
+        <tr>
+            <td class="head">Name:</td>
+            <td>{{application.name}}</td>
+        </tr>
+        <tr>
+            <td class="head">Address:</td>
+            <td>{{application.address}}</td>
+        </tr>
+        <tr>
+            <td class="head">Survey No.</td>
+            <td>{{application.survey_no}}</td>
+        </tr>
+        <tr>
+            <td class="head">Name of the Village/Taluka/Block and District where the land on which the tree or trees
+                stand/lie:</td>
+            <td>{{application.village}}</td>
+        </tr>
+        <tr>
+            <td class="head">List showing the species of tree or trees proposed to be cut,etc:</td>
+            <td>{{application.species_of_trees}}</td>
+        </tr>
+        <tr>
+            <td class="head">Purpose for which trees are proposed to be cut,etc:</td>
+            <td>{{application.purpose}}</td>
+        </tr>
+        <tr>
+            <td class="head">Location</td>
+            <td><a target="_blank" href="{% url 'location_view' application.id %}" class="btn btn-success" style="width: 15%; padding: 4px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 15px;">View Location</a></td>
+        </tr>
+        {% comment %} <tr>
+            <td class="head">Transit Pass</td>
+            <td><a href="{% url 'transit_pass_pdf' application.id %}" class="btn btn-success" style="width: 15%; padding: 4px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 15px;">View Transit Pass</a></td>
+        </tr> {% endcomment %}
+        <tr>
+            <td class="head">User Report</td>
+            <td><a href="{% url 'user_report' application.id %}" class="btn btn-success" style="width: 15%; padding: 4px; border-radius: 0px; box-shadow: 0px;  background-color: #012a6c; font-size: 15px;">View User Report</a></td>
+        </tr>
+        <tr>
+            <td class="head">Destination state</td>
+            <td>{{application.destination_state}}</td>
+        </tr>
+        <tr>
+            <td class="head">Destination address</td>
+            <td>{{application.destination_state}}</td>
+        </tr>
+        
+        <tr>
+            <td class="head">Mode of Transport</td>
+            <td>{{transit.mode_of_transport}}</td>
+        </tr>
+        <tr>
+            <td class="head">Vehicle Registration Number</td>
+            <td>{{transit.vehicle_reg_no}}</td>
+        </tr>
+        <tr>
+            <td class="head">Driver Name</td>
+            <td>{{transit.driver_name}}</td>
+        </tr>
+        <tr>
+            <td class="head">Driver Phone</td>
+            <td>{{transit.driver_phone}}</td>
+        </tr>
+        
+        
+                        
+    </table>
+    <br><br><hr><br>
+    <span id="center" style="font-size: larger;"><b>Previous applied transits</b>{% ifequal formtype "edit" %}<a> &nbsp; <i class="fa fa-pencil edit-volume "></i></a>{% endifequal %}</span>
+    <br>
+    <div  >
+    {% for each,history in logs %}
+    
+    <div style="width: 70%; ">
+      <div style="display: flex; flex-direction: row; align-items: center; ">
+      <table class="tree__item">
+        <thead>
+          <tr>
+              <th id="vol">Species</th>
+              <th id="vol">Height(m)</th>
+              <th id="vol">GDH(cm)</th>
+              <th id="vol">Volume</th>
+           
+          </tr>
+          </thead>
+        <tbody>
+            <tr>
+              <td>{{each.species_of_tree}}</td>
+              <td>{{each.length}}</td>
+              <td>{{each.breadth}}</td>
+              <td>{{each.volume}}</td>
+             
+            </tr>
+          </tbody>
+    </table></div></div>
+    
+    {% for data in history.values %}
+    <ul class="tree__nested-items" id="1">
+    <table class="tree__item tree__item--nested">
+        
+    {% if data.product == "Log" %}
+    <tr>
+        <th>Product</th>
+        <th>Height</th>
+        <th>MDH</th>
+        <th>Transit ID</th>
+        <th>Approval Status</th>
+    </tr>
+    <tr>
+        <td>{{data.product}}</td>
+        <td>{{data.log_height}}</td>
+        <td>{{data.log_mdh}}</td>
+        <td>{{data.transit_pass_id}}</td>
+        
+        {% if data.is_transit_approved == 1%}
+        <th>Approved</th>
+        {% elif data.is_transit_approved == 2 %}
+        <th>Rejected</th>
+        {% else %}
+          {% if data.transit_pass_id == transit.id%}
+          <th>Current Transit</th>
+          {% else %}
+          <th>Pending</th>
+          {% endif %} 
+        {% endif %} 
+
+        
+        
+    </tr>
+    {% elif data.product == "Firewood" %}
+    <tr>
+        <th>Product</th>
+        <th>Weight</th>
+        <th>Transit ID</th>
+        <th>Approval Status</th>
+    </tr>
+    <tr>
+        <td>{{data.product}}</td>
+        <td>{{data.firewood_weight}}</td>
+        <td>{{data.transit_pass_id}}</td>
+
+        {% if data.is_transit_approved == 1%}
+        <th>Approved</th>
+        {% elif data.is_transit_approved == 2 %}
+        <th>Rejected</th>
+        {% else %}
+          {% if data.transit_pass_id == transit.id%}
+          <th>Current Transit</th>
+          {% else %}
+          <th>Pending</th>
+          {% endif %} 
+        {% endif %} 
+    </tr>
+    {% else %}
+    <tr>
+        <th>Product</th>
+        <th>Length</th>
+        <th>Breadth</th>
+        <th>Height</th>
+        <th>Transit ID</th>
+        <th>Approval Status</th>
+    </tr>
+    <tr>
+        <td>Swan</td>
+        <td>{{data.swan_length}}</td>
+        <td>{{data.swan_breadth}}</td>
+        <td>{{data.swan_height}}</td>
+        <td>{{data.transit_pass_id}}</td>
+
+        {% if data.is_transit_approved == 1%}
+        <th>Approved</th>
+        {% elif data.is_transit_approved == 2 %}
+        <th>Rejected</th>
+        {% else %}
+          {% if data.transit_pass_id == transit.id%}
+          <th>Current Transit</th>
+          {% else %}
+          <th>Pending</th>
+          {% endif %} 
+        {% endif %} 
+    </tr>
+    {% endif %}
+    </table>
+    </ul>
+    
+    {% endfor %}
+    {% endfor %}
+</div>
+            <br>
+    <br><hr><br>
+    <form  enctype="multipart/form-data"  action="" method="post" >
+        {% csrf_token %}
+        <label for="ccheckpost" class="required" style="display: flex; justify-content: center; font-size: larger;"><b>Requested products to transit</b></label>
+        <br>
+        <div class="input_box" id="Cutting Permission"  >
+
+            {% for each,history in curent_request %}
+    
+            <div style="width: 70%;">
+              <div style="display: flex; flex-direction: row; align-items: center; ">
+              <table class="tree__item">
+                <thead>
+                  <tr>
+                      <th id="vol">Species</th>
+                      <th id="vol">Height(m)</th>
+                      <th id="vol">GDH(cm)</th>
+                      <th id="vol">Volume</th>
+                   
+                  </tr>
+                  </thead>
+                <tbody>
+                    <tr>
+                      <td>{{each.species_of_tree}}</td>
+                      <td>{{each.length}}</td>
+                      <td>{{each.breadth}}</td>
+                      <td>{{each.volume}}</td>
+                     
+                    </tr>
+                  </tbody>
+            </table></div></div>
+            
+            {% for data in history.values %}
+            <ul class="tree__nested-items" id="1">
+            <table class="tree__item tree__item--nested">
+                
+            {% if data.product == "Log" %}
+            <tr>
+                <th>Product</th>
+                <th>Height</th>
+                <th>MDH</th>
+                <th>Check</th>
+                
+            </tr>
+            <tr>
+                <td>{{data.product}}</td>
+                <td>{{data.log_height}}</td>
+                <td>{{data.log_mdh}}</td>
+                <td><input type="checkbox" name="logs_to_approve" value="{{data.id}}" onchange="check_123()" ></td>
+                
+                
+                
+            </tr>
+            {% elif data.product == "Firewood" %}
+            <tr>
+                <th>Product</th>
+                <th>Weight</th>
+                <th>Check</th>
+            </tr>
+            <tr>
+                <td>{{data.product}}</td>
+                <td>{{data.firewood_weight}}</td>
+                <td><input type="checkbox" name="logs_to_approve" value="{{data.id}}" onchange="check_123()"></td>        
+            </tr>
+            {% else %}
+            <tr>
+                <th>Product</th>
+                <th>Length</th>
+                <th>Breadth</th>
+                <th>Height</th>
+                <th>Check</th>
+            </tr>
+            <tr>
+                <td>Swan</td>
+                <td>{{data.swan_length}}</td>
+                <td>{{data.swan_breadth}}</td>
+                <td>{{data.swan_height}}</td>
+                <td><input type="checkbox" name="logs_to_approve" value="{{data.id}}" onchange="check_123()"></td>        
+                
+            </tr>
+            {% endif %}
+            </table>
+            </ul>
+            
+            {% endfor %}
+            {% endfor %}
+                    <br>
+               
+               
+               
+           
+            <br>
+            {% comment %} <label for="ccheckpost" class="required"><b>Select CheckPosts: </b></label>&nbsp;&nbsp;&nbsp;
+            <select class="js-example-basic-multiple" name="states[]" id="cheks" multiple="multiple" style="width: 60%;" required>
+                {% for check in checks %}
+                <option value="{{ check.id }}" class="{{ check.name }}" id="{{ check.id }}" >{{ check.name }}</option>
+            {% endfor %}
+              </select>
+              <script>
+                
+            $(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+    });
+        {% endcomment %}
+              </script>
+            
+        <br>
+        <br>
+<div style="width: 60%;">
+    <label for="ccheckpost" class="required"><b>Add Remarks : </b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="text" name="remark_text" style="height:38px;" required></div>
+        
+       <br>
+       <div style="width: 60%;">
+        <label for="ccheckpost" ><b>Add Remarks File :</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <input type="file" name="remark_file" >
+       </div>
+       <script>
+        function check_123(){
+            var box = $('input[name="logs_to_approve"]:checked').length;
+              if(box<1){
+                document.getElementById('App_123').style.display = "none"
+                document.getElementById('App_124').style.display = "block"
+              }
+              else{
+                document.getElementById('App_123').style.display = "block"
+                document.getElementById('App_124').style.display = "none"
+
+              }
+
+                console.log( box)
+            
+        }
+       </script>
+       <br>
+       <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+        <input type="submit" class="btn btn-danger" name="action" id="App_124" value="Reject" style="margin: 15px;" onclick="remove_req()">
+        <input type="submit" class="btn btn-success" name="action" id="App_123" value="Approve"  style="margin: 15px; display: none;" onclick="add_req()">
+       </div>
+     
+        
+        <script>
+            function remove_req(){
+                document.getElementById("cheks").required = false;
+
+            }
+            function add_req(){
+                document.getElementById("cheks").required = true;
+
+            }
+        </script>
+        
+    </form>
+    </div>
+ <script>
+       
+            window.history.forward();
+            function noBack() {
+                window.history.forward();
+            }
+         
+ </script>
+
+
+</body>
+{% endblock %}
